@@ -5,17 +5,17 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-class sSocketServerComunicator extends Thread{
+class SSocketServerComunicator extends Thread{
 	private Socket socket;
-	private sSocketServerData ssocketServerData;
+	private SSocketServerData ssocketServerData;
 	private DataInputStream dataInput;
 	private DataOutputStream dataOutput;
-	public sSocketServerComunicator(Socket socket, sSocketServerData ssocketServerData){
+	public SSocketServerComunicator(Socket socket, SSocketServerData ssocketServerData){
 		this.socket = socket;
 		this.ssocketServerData = ssocketServerData;
 		try {
-			dataInput = new DataInputStream(socket.getInputStream());
-			dataOutput = new DataOutputStream(socket.getOutputStream());
+			dataInput = new DataInputStream(this.socket.getInputStream());
+			dataOutput = new DataOutputStream(this.socket.getOutputStream());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

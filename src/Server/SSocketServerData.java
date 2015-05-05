@@ -5,10 +5,10 @@ import java.util.Map;
 
 import tool.Encrypt;
 
-class sSocketServerData {
+class SSocketServerData {
 	private Map<String, String> map;
 	Encrypt encrypt;
-	public sSocketServerData() {
+	public SSocketServerData() {
 		map = new HashMap<String, String>();
 		encrypt = new Encrypt();
 	}

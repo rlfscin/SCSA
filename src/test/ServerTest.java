@@ -1,11 +1,12 @@
 package test;
 
-import Server.sSocketServer;
+import Server.SSocketServer;
+
 
 public class ServerTest {
 
 	public static void main(String[] args) {
-		sSocketServer server = new sSocketServer(5999);
+		SSocketServer server = new SSocketServer(5999);
 		
 	}
 

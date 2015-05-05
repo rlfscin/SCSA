@@ -7,14 +7,14 @@ import java.net.Socket;
 
 import tool.Encrypt;
 
-public class sSocketComunicator extends Thread {
+public class SSocketComunicator extends Thread {
 	private Socket socket;
 	private DataInputStream dataInput;
 	private DataOutputStream dataOutput;
 	private Encrypt encrypt;
 	
 	
-	public sSocketComunicator(Encrypt encrypt, Socket socket){
+	public SSocketComunicator(Encrypt encrypt, Socket socket){
 		this.socket = socket;
 		try {
 			this.dataInput = new DataInputStream(this.socket.getInputStream());

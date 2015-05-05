@@ -1,11 +1,12 @@
 package test;
 
-import Socket.sSocket;
+import Socket.SSocket;
+
 
 public class ClientA {
 
 	public static void main(String[] args) {
-		sSocket socket = new sSocket();
+		SSocket socket = new SSocket();
 	}
 
 }

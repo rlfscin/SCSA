@@ -6,15 +6,15 @@ import java.net.UnknownHostException;
 
 import tool.Encrypt;
 
-public class sSocket {
+public class SSocket {
 	private Encrypt encrypt;
 	private Socket socket;
 	
-	public sSocket(){
+	public SSocket(){
 		try {
 			encrypt = new Encrypt();
 			this.socket = new Socket("localhost", 5999);
-			(new sSocketComunicator(encrypt, socket)).start();
+			(new SSocketComunicator(encrypt, socket)).start();
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
