@@ -5,16 +5,16 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-import tool.Encrypt;
+import tool.AsymmetricCrypto;
 
 public class SSocketComunicator extends Thread {
 	private Socket socket;
 	private DataInputStream dataInput;
 	private DataOutputStream dataOutput;
-	private Encrypt encrypt;
+	private AsymmetricCrypto encrypt;
 	
 	
-	public SSocketComunicator(Encrypt encrypt, Socket socket){
+	public SSocketComunicator(AsymmetricCrypto encrypt, Socket socket){
 		this.socket = socket;
 		try {
 			this.dataInput = new DataInputStream(this.socket.getInputStream());
@@ -26,6 +26,7 @@ public class SSocketComunicator extends Thread {
 		}
 	}
 	
+	/*
 	public void run(){
 		try {
 			String publicServerKey = dataInput.readUTF();
@@ -37,6 +38,6 @@ public class SSocketComunicator extends Thread {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
-	}
+	}*/
 
 }

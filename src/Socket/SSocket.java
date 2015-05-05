@@ -4,15 +4,15 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import tool.Encrypt;
+import tool.AsymmetricCrypto;
 
 public class SSocket {
-	private Encrypt encrypt;
+	private AsymmetricCrypto encrypt;
 	private Socket socket;
 	
 	public SSocket(){
 		try {
-			encrypt = new Encrypt();
+			encrypt = new AsymmetricCrypto();
 			this.socket = new Socket("localhost", 5999);
 			(new SSocketComunicator(encrypt, socket)).start();
 		} catch (UnknownHostException e) {

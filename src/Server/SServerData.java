@@ -3,14 +3,14 @@ package Server;
 import java.util.HashMap;
 import java.util.Map;
 
-import tool.Encrypt;
+import tool.AsymmetricCrypto;
 
 class SServerData {
 	private Map<String, String> map;
-	Encrypt encrypt;
+	AsymmetricCrypto encrypt;
 	public SServerData() {
 		map = new HashMap<String, String>();
-		encrypt = new Encrypt();
+		encrypt = new AsymmetricCrypto();
 	}
 	public synchronized boolean addKey(String host, String key){
 		map.put(host, key);
@@ -19,7 +19,7 @@ class SServerData {
 	public synchronized String getKey(String host){
 		return map.get(host);
 	}
-	
+	/*
 	public String getPublicKey(){
 		return encrypt.getPublicKey();
 	}
@@ -27,4 +27,5 @@ class SServerData {
 	public String decrypt(String text){
 		return encrypt.decrypt(text);
 	}
+	*/
 }

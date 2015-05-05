@@ -21,21 +21,22 @@ class SServerComunicator extends Thread{
 			e.printStackTrace();
 		}
 	}
+	/*
 	public void run(){
 		try {
-			handShake();
-			communicate();
+			//handShake();
+			//communicate();
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-	
+	}*/
+	/*
 	private void handShake() throws IOException{
 		dataOutput.writeUTF(sServerData.getPublicKey());
-	}
-	
+	}*/
+	/*
 	private void communicate() throws IOException{
 		//while(true){
 			String text = dataInput.readUTF();
@@ -43,5 +44,5 @@ class SServerComunicator extends Thread{
 			text  = sServerData.decrypt(text);
 			System.out.println(text);
 		//}
-	}
+	}*/
 }
