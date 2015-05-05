@@ -4,19 +4,19 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class SSocketServer {
+public class SServer {
 	private ServerSocket serverSocket;
-	private SSocketServerData ssocketSerterData;
+	private SServerData sSerterData;
 	private int port;
 
-	public SSocketServer(int port){
+	public SServer(int port){
 		this.port = port;
-		ssocketSerterData = new SSocketServerData();
+		sSerterData = new SServerData();
 		try {
 			serverSocket = new ServerSocket(this.port);
 			while(true){
 				Socket socket = serverSocket.accept();
-				(new SSocketServerComunicator(socket, ssocketSerterData)).start();
+				(new SServerComunicator(socket, sSerterData)).start();
 			}
 		} catch (IOException e) {
 			System.err.println(this.port+" is being used.");

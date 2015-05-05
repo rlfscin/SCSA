@@ -5,14 +5,14 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-class SSocketServerComunicator extends Thread{
+class SServerComunicator extends Thread{
 	private Socket socket;
-	private SSocketServerData ssocketServerData;
+	private SServerData sServerData;
 	private DataInputStream dataInput;
 	private DataOutputStream dataOutput;
-	public SSocketServerComunicator(Socket socket, SSocketServerData ssocketServerData){
+	public SServerComunicator(Socket socket, SServerData sServerData){
 		this.socket = socket;
-		this.ssocketServerData = ssocketServerData;
+		this.sServerData = sServerData;
 		try {
 			dataInput = new DataInputStream(this.socket.getInputStream());
 			dataOutput = new DataOutputStream(this.socket.getOutputStream());
@@ -33,14 +33,14 @@ class SSocketServerComunicator extends Thread{
 	}
 	
 	private void handShake() throws IOException{
-		dataOutput.writeUTF(ssocketServerData.getPublicKey());
+		dataOutput.writeUTF(sServerData.getPublicKey());
 	}
 	
 	private void communicate() throws IOException{
 		//while(true){
 			String text = dataInput.readUTF();
 			System.out.println(text);
-			text  = ssocketServerData.decrypt(text);
+			text  = sServerData.decrypt(text);
 			System.out.println(text);
 		//}
 	}
