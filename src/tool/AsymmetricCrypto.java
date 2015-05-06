@@ -45,11 +45,11 @@ public class AsymmetricCrypto {
 	 * @param  key byte array
 	 * @return   encrypted byte array
 	 */
-	public byte[] EncText(String plainText, byte[] keyBytes, String mode) throws Exception {
+	public byte[] encText(String plainText, byte[] keyBytes, String mode) throws Exception {
 		byte[] cipherBytes = null;
 		byte[] plainBytes = plainText.getBytes(); 			
 
-		cipherBytes = asyEncrypt(plainBytes);
+		cipherBytes = encrypt(plainBytes);
 
 		return cipherBytes;
 	}
@@ -61,11 +61,11 @@ public class AsymmetricCrypto {
 	 * @param  key byte array
 	 * @return   plain text message
 	 */
-	public String DecText(byte[] cipherBytes, byte[] keyBytes, String mode)throws Exception{
+	public String decText(byte[] cipherBytes, byte[] keyBytes, String mode)throws Exception{
 		String plainText = "";
 		byte[] plainBytes;
 
-		plainBytes = asyDecrypt(cipherBytes);
+		plainBytes = decrypt(cipherBytes);
 
 		plainText = new String(plainBytes, "UTF-8");
 
@@ -73,12 +73,12 @@ public class AsymmetricCrypto {
 	}
 
 
-	public byte[] asyEncrypt(byte[] plainBytes) throws Exception{
-		return asyEncrypt(plainBytes, null);
+	public byte[] encrypt(byte[] plainBytes) throws Exception{
+		return encrypt(plainBytes, null);
 	}
 
 	// MUST RECEIVE A PUBLIC KEY, AND ALSO ENCRYPT USING THEIR OWN PRIVATE
-	public byte[] asyEncrypt(byte[] plainBytes, byte[] keyBytes) throws Exception{		
+	public byte[] encrypt(byte[] plainBytes, byte[] keyBytes) throws Exception{		
 		if (keyBytes != null){
 			// test line below, otherwise need to receive the PublicKey via parameter
 			PublicKey publicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(keyBytes));
@@ -88,15 +88,15 @@ public class AsymmetricCrypto {
 		}
 
 		byte[] bytes = plainBytes;
-		byte[] cipherBytes = asyBlockCipher(bytes,Cipher.ENCRYPT_MODE);		
+		byte[] cipherBytes = blockCipher(bytes,Cipher.ENCRYPT_MODE);		
 		return cipherBytes;
 	}
 
-	public byte[] asyDecrypt(byte[] cipherBytes) throws Exception{
-		return asyDecrypt(cipherBytes, null);
+	public byte[] decrypt(byte[] cipherBytes) throws Exception{
+		return decrypt(cipherBytes, null);
 	}
 
-	public byte[] asyDecrypt(byte[] cipherBytes, byte[] keyBytes) throws Exception{
+	public byte[] decrypt(byte[] cipherBytes, byte[] keyBytes) throws Exception{
 		if (keyBytes != null){
 			// test line below, otherwise need to receive the PublicKey via parameter
 			PublicKey publicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(keyBytes));
@@ -104,11 +104,11 @@ public class AsymmetricCrypto {
 		}else{
 			cipher.init(Cipher.DECRYPT_MODE, keypair.getPublic());
 		}				
-		byte[] plainBytes = asyBlockCipher(cipherBytes,Cipher.DECRYPT_MODE);
+		byte[] plainBytes = blockCipher(cipherBytes,Cipher.DECRYPT_MODE);
 		return plainBytes;
 	}
 
-	private byte[] asyBlockCipher(byte[] plainBytes, int mode) throws IllegalBlockSizeException, BadPaddingException{
+	private byte[] blockCipher(byte[] plainBytes, int mode) throws IllegalBlockSizeException, BadPaddingException{
 		// string initialize 2 buffers.
 		// scrambled will hold intermediate results
 		byte[] scrambled = new byte[0];
