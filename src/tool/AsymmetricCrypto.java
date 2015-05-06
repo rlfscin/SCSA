@@ -16,19 +16,13 @@ public class AsymmetricCrypto {
 	private Cipher cipher;
 	private KeyPair keypair;
 
-	public AsymmetricCrypto() {
-		try {
-			asyGenKeys();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public AsymmetricCrypto() throws Exception{
+		asyGenKeys();
 	}
 
 	public byte[] getPublicKey(){		
 		return keypair.getPublic().getEncoded();
 	}
-
 
 	private void asyGenKeys() throws Exception{
 		KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
@@ -39,7 +33,7 @@ public class AsymmetricCrypto {
 	}
 
 	/**
-	 * 3DES Symmetric Encryption
+	 * RSA Asymmetric Encryption - uses encrypt()
 	 * 
 	 * @param  plaintext
 	 * @param  key byte array
@@ -47,15 +41,13 @@ public class AsymmetricCrypto {
 	 */
 	public byte[] encText(String plainText, byte[] keyBytes, String mode) throws Exception {
 		byte[] cipherBytes = null;
-		byte[] plainBytes = plainText.getBytes(); 			
-
+		byte[] plainBytes = plainText.getBytes();
 		cipherBytes = encrypt(plainBytes);
-
 		return cipherBytes;
 	}
 
 	/**
-	 * 3DES Symmetric Encryption
+	 * RSA Asymmetric Encryption - uses decrypt()
 	 * 
 	 * @param  cipher byte array
 	 * @param  key byte array
@@ -64,11 +56,8 @@ public class AsymmetricCrypto {
 	public String decText(byte[] cipherBytes, byte[] keyBytes, String mode)throws Exception{
 		String plainText = "";
 		byte[] plainBytes;
-
 		plainBytes = decrypt(cipherBytes);
-
 		plainText = new String(plainBytes, "UTF-8");
-
 		return plainText;
 	}
 

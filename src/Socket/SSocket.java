@@ -10,7 +10,7 @@ public class SSocket {
 	private AsymmetricCrypto encrypt;
 	private Socket socket;
 	
-	public SSocket(){
+	public SSocket() throws Exception{
 		try {
 			encrypt = new AsymmetricCrypto();
 			this.socket = new Socket("localhost", 5999);

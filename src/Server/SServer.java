@@ -9,7 +9,7 @@ public class SServer {
 	private SServerData sSerterData;
 	private int port;
 
-	public SServer(int port){
+	public SServer(int port) throws Exception{
 		this.port = port;
 		sSerterData = new SServerData();
 		try {

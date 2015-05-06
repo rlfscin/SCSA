@@ -8,7 +8,7 @@ import tool.AsymmetricCrypto;
 class SServerData {
 	private Map<String, String> map;
 	AsymmetricCrypto encrypt;
-	public SServerData() {
+	public SServerData() throws Exception {
 		map = new HashMap<String, String>();
 		encrypt = new AsymmetricCrypto();
 	}

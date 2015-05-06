@@ -21,9 +21,7 @@ public class SymmetricCrypto {
 	public byte[] encText(String plainText, byte[] keyBytes, String mode) throws Exception {
 		byte[] cipherBytes = null;
 		byte[] plainBytes = plainText.getBytes(); 			
-
 		cipherBytes = encrypt(plainBytes, keyBytes);
-
 		return cipherBytes;
 	}
 
@@ -37,23 +35,20 @@ public class SymmetricCrypto {
 	public String decText(byte[] cipherBytes, byte[] keyBytes, String mode)throws Exception{
 		String plainText = "";
 		byte[] plainBytes;
-
 		plainBytes = decrypt(cipherBytes, keyBytes);
-
 		plainText = new String(plainBytes, "UTF-8");
-
 		return plainText;
 	}
 
 	/**
 	 * PRIVATE
-	 * 3DES Symmetric Encryption
+	 * 3DES Symmetric Encryption - uses encrypt()
 	 * 
 	 * @param  plaintext byte array
 	 * @param  key byte array
 	 * @return   encrypted byte array
 	 */
-	private byte[] encrypt(byte[] plainBytes, byte[] keyBytes) throws Exception {
+	public byte[] encrypt(byte[] plainBytes, byte[] keyBytes) throws Exception {
 		final SecretKey key = new SecretKeySpec(keyBytes, "DESede");
 		final IvParameterSpec iv = new IvParameterSpec(new byte[8]);
 		final Cipher cipher = Cipher.getInstance("DESede/CBC/PKCS5Padding");
@@ -65,13 +60,13 @@ public class SymmetricCrypto {
 
 	/**
 	 * PRIVATE
-	 * 3DES Symmetric Decryption
+	 * 3DES Symmetric Decryption - uses decrypt()
 	 * 
 	 * @param  encrypted byte array
 	 * @param  key byte array
 	 * @return   plain text byte array
 	 */
-	private byte[] decrypt(byte[] cipherBytes, byte[] keyBytes) throws Exception {
+	public byte[] decrypt(byte[] cipherBytes, byte[] keyBytes) throws Exception {
 		final SecretKey key = new SecretKeySpec(keyBytes, "DESede");
 		final IvParameterSpec iv = new IvParameterSpec(new byte[8]);
 		final Cipher decipher = Cipher.getInstance("DESede/CBC/PKCS5Padding");
