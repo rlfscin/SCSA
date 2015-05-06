@@ -26,19 +26,20 @@ public class SSocket {
 			this.serverAddress = serverAddress;
 			this.serverPort = serverPort;
 			
-			logon();
+			serverPublicKey = logon();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	private void logon() throws UnknownHostException, IOException{
+	private byte[] logon() throws UnknownHostException, IOException{
 		this.socket = new Socket(InetAddress.getByName(serverAddress), serverPort);
 		// socket opened inside the authenticator
 		SSocketAuthenticator ssAuthenticator = new SSocketAuthenticator(asyCrypto, socket);
-		serverPublicKey = ssAuthenticator.authenticate();
+		byte[] serverkey = ssAuthenticator.authenticate();
 		socket.close();
+		return serverkey;
 	}
 	
 	private void communicate(String address){

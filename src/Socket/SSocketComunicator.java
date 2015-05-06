@@ -51,6 +51,7 @@ public class SSocketComunicator extends Thread {
 		return message;
 	}
 
+	
 
 	public void sendBytes(byte[] bytes){
 		// use whatever is necessary to send bytes
@@ -60,7 +61,6 @@ public class SSocketComunicator extends Thread {
 		byte[] bytes = null;
 		
 		// use whatever is necessary to receive bytes
-		
 		return bytes;
 	}
 

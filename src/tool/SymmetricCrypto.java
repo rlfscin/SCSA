@@ -1,5 +1,12 @@
 package tool;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
@@ -11,13 +18,35 @@ public class SymmetricCrypto {
 		
 	}
 	
-	/**
-	 * 3DES Symmetric Encryption- uses encrypt()
-	 * 
-	 * @param  plaintext
-	 * @param  key byte array
-	 * @return   encrypted byte array
-	 */
+	public byte[] encObject(Serializable plainObject, byte[] keyBytes) throws Exception {
+		byte[] cipherBytes = null;
+		byte[] plainBytes =  serialize(plainObject); 			
+		cipherBytes = encrypt(plainBytes, keyBytes);		
+		
+		return cipherBytes;
+	}
+	
+	public Serializable decObject(byte[] cipherBytes, byte[] keyBytes)throws Exception{
+		Serializable plainObject;
+		byte[] plainBytes;
+		plainBytes = decrypt(cipherBytes, keyBytes);
+		plainObject = new String(plainBytes, "UTF-8");
+		return plainObject;
+	}
+
+	public static byte[] serialize(Serializable obj) throws IOException {
+	    ByteArrayOutputStream out = new ByteArrayOutputStream();
+	    ObjectOutputStream os = new ObjectOutputStream(out);
+	    os.writeObject(obj);
+	    return out.toByteArray();
+	}
+	
+	public static Serializable deserialize(byte[] data) throws IOException, ClassNotFoundException {
+	    ByteArrayInputStream in = new ByteArrayInputStream(data);
+	    ObjectInputStream is = new ObjectInputStream(in);
+	    return (Serializable)is.readObject();
+	}
+	
 	public byte[] encText(String plainText, byte[] keyBytes) throws Exception {
 		byte[] cipherBytes = null;
 		byte[] plainBytes = plainText.getBytes(); 			
@@ -25,29 +54,15 @@ public class SymmetricCrypto {
 		return cipherBytes;
 	}
 
-	/**
-	 * 3DES Symmetric Decryption - uses decrypt()
-	 * 
-	 * @param  cipher byte array
-	 * @param  key byte array
-	 * @return   plain text message
-	 */
 	public String decText(byte[] cipherBytes, byte[] keyBytes)throws Exception{
 		String plainText = "";
 		byte[] plainBytes;
 		plainBytes = decrypt(cipherBytes, keyBytes);
 		plainText = new String(plainBytes, "UTF-8");
 		return plainText;
+		
 	}
 
-	/**
-	 * PRIVATE
-	 * 3DES Symmetric Encryption 
-	 * 
-	 * @param  plaintext byte array
-	 * @param  key byte array
-	 * @return   encrypted byte array
-	 */
 	public byte[] encrypt(byte[] plainBytes, byte[] keyBytes) throws Exception {
 		final SecretKey key = new SecretKeySpec(keyBytes, "DESede");
 		final IvParameterSpec iv = new IvParameterSpec(new byte[8]);
@@ -58,14 +73,6 @@ public class SymmetricCrypto {
 		return cipherBytes;
 	}
 
-	/**
-	 * PRIVATE
-	 * 3DES Symmetric Decryption
-	 * 
-	 * @param  encrypted byte array
-	 * @param  key byte array
-	 * @return   plain text byte array
-	 */
 	public byte[] decrypt(byte[] cipherBytes, byte[] keyBytes) throws Exception {
 		final SecretKey key = new SecretKeySpec(keyBytes, "DESede");
 		final IvParameterSpec iv = new IvParameterSpec(new byte[8]);
