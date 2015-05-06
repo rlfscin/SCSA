@@ -12,13 +12,13 @@ public class SymmetricCrypto {
 	}
 	
 	/**
-	 * 3DES Symmetric Encryption
+	 * 3DES Symmetric Encryption- uses encrypt()
 	 * 
 	 * @param  plaintext
 	 * @param  key byte array
 	 * @return   encrypted byte array
 	 */
-	public byte[] encText(String plainText, byte[] keyBytes, String mode) throws Exception {
+	public byte[] encText(String plainText, byte[] keyBytes) throws Exception {
 		byte[] cipherBytes = null;
 		byte[] plainBytes = plainText.getBytes(); 			
 		cipherBytes = encrypt(plainBytes, keyBytes);
@@ -26,13 +26,13 @@ public class SymmetricCrypto {
 	}
 
 	/**
-	 * 3DES Symmetric Encryption
+	 * 3DES Symmetric Decryption - uses decrypt()
 	 * 
 	 * @param  cipher byte array
 	 * @param  key byte array
 	 * @return   plain text message
 	 */
-	public String decText(byte[] cipherBytes, byte[] keyBytes, String mode)throws Exception{
+	public String decText(byte[] cipherBytes, byte[] keyBytes)throws Exception{
 		String plainText = "";
 		byte[] plainBytes;
 		plainBytes = decrypt(cipherBytes, keyBytes);
@@ -42,7 +42,7 @@ public class SymmetricCrypto {
 
 	/**
 	 * PRIVATE
-	 * 3DES Symmetric Encryption - uses encrypt()
+	 * 3DES Symmetric Encryption 
 	 * 
 	 * @param  plaintext byte array
 	 * @param  key byte array
@@ -60,7 +60,7 @@ public class SymmetricCrypto {
 
 	/**
 	 * PRIVATE
-	 * 3DES Symmetric Decryption - uses decrypt()
+	 * 3DES Symmetric Decryption
 	 * 
 	 * @param  encrypted byte array
 	 * @param  key byte array

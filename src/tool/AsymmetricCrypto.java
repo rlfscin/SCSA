@@ -39,7 +39,7 @@ public class AsymmetricCrypto {
 	 * @param  key byte array
 	 * @return   encrypted byte array
 	 */
-	public byte[] encText(String plainText, byte[] keyBytes, String mode) throws Exception {
+	public byte[] encText(String plainText, byte[] keyBytes) throws Exception {
 		byte[] cipherBytes = null;
 		byte[] plainBytes = plainText.getBytes();
 		cipherBytes = encrypt(plainBytes);
@@ -53,7 +53,7 @@ public class AsymmetricCrypto {
 	 * @param  key byte array
 	 * @return   plain text message
 	 */
-	public String decText(byte[] cipherBytes, byte[] keyBytes, String mode)throws Exception{
+	public String decText(byte[] cipherBytes, byte[] keyBytes)throws Exception{
 		String plainText = "";
 		byte[] plainBytes;
 		plainBytes = decrypt(cipherBytes);

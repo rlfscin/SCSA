@@ -7,10 +7,10 @@ import tool.AsymmetricCrypto;
 
 class SServerData {
 	private Map<String, String> map;
-	AsymmetricCrypto encrypt;
+	AsymmetricCrypto asyCrypto;
 	public SServerData() throws Exception {
 		map = new HashMap<String, String>();
-		encrypt = new AsymmetricCrypto();
+		asyCrypto = new AsymmetricCrypto();
 	}
 	public synchronized boolean addKey(String host, String key){
 		map.put(host, key);
