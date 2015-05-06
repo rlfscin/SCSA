@@ -3,6 +3,12 @@ package Socket;
 import java.net.InetAddress;
 
 public class Peer {
+	
+	public Peer(String address, byte[] sessionKey) throws Exception{
+		this.sessionKey = sessionKey;
+		setAddress(address);
+	}
+	
 	private InetAddress address;
 	public byte[] sessionKey;
 	
