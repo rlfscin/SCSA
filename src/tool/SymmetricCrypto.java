@@ -1,0 +1,85 @@
+package tool;
+
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+
+public class SymmetricCrypto {
+	
+	public SymmetricCrypto(){
+		
+	}
+	
+	/**
+	 * 3DES Symmetric Encryption
+	 * 
+	 * @param  plaintext
+	 * @param  key byte array
+	 * @return   encrypted byte array
+	 */
+	public byte[] EncText(String plainText, byte[] keyBytes, String mode) throws Exception {
+		byte[] cipherBytes = null;
+		byte[] plainBytes = plainText.getBytes(); 			
+
+		cipherBytes = symEncrypt(plainBytes, keyBytes);
+
+		return cipherBytes;
+	}
+
+	/**
+	 * 3DES Symmetric Encryption
+	 * 
+	 * @param  cipher byte array
+	 * @param  key byte array
+	 * @return   plain text message
+	 */
+	public String DecText(byte[] cipherBytes, byte[] keyBytes, String mode)throws Exception{
+		String plainText = "";
+		byte[] plainBytes;
+
+		plainBytes = symDecrypt(cipherBytes, keyBytes);
+
+
+		plainText = new String(plainBytes, "UTF-8");
+
+		return plainText;
+	}
+
+	/**
+	 * PRIVATE
+	 * 3DES Symmetric Encryption
+	 * 
+	 * @param  plaintext byte array
+	 * @param  key byte array
+	 * @return   encrypted byte array
+	 */
+	private byte[] symEncrypt(byte[] plainBytes, byte[] keyBytes) throws Exception {
+		final SecretKey key = new SecretKeySpec(keyBytes, "DESede");
+		final IvParameterSpec iv = new IvParameterSpec(new byte[8]);
+		final Cipher cipher = Cipher.getInstance("DESede/CBC/PKCS5Padding");
+		cipher.init(Cipher.ENCRYPT_MODE, key, iv);
+
+		final byte[] cipherBytes = cipher.doFinal(plainBytes);
+		return cipherBytes;
+	}
+
+	/**
+	 * PRIVATE
+	 * 3DES Symmetric Decryption
+	 * 
+	 * @param  encrypted byte array
+	 * @param  key byte array
+	 * @return   plain text byte array
+	 */
+	private byte[] symDecrypt(byte[] cipherBytes, byte[] keyBytes) throws Exception {
+		final SecretKey key = new SecretKeySpec(keyBytes, "DESede");
+		final IvParameterSpec iv = new IvParameterSpec(new byte[8]);
+		final Cipher decipher = Cipher.getInstance("DESede/CBC/PKCS5Padding");
+		decipher.init(Cipher.DECRYPT_MODE, key, iv);
+
+		final byte[] plainBytes = decipher.doFinal(cipherBytes);
+		return plainBytes;
+	}
+
+}

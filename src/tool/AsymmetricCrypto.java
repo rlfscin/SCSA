@@ -1,18 +1,21 @@
 package tool;
 
+
+import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
-import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.spec.X509EncodedKeySpec;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 
 public class AsymmetricCrypto {
-	
+
 	private Cipher cipher;
 	private KeyPair keypair;
-	
+
 	public AsymmetricCrypto() {
 		try {
 			asyGenKeys();
@@ -21,11 +24,12 @@ public class AsymmetricCrypto {
 			e.printStackTrace();
 		}
 	}
-	
-	/*public String getPublicKey(){
-		return publicKey;
-	}*/
-	
+
+	public byte[] getPublicKey(){		
+		return keypair.getPublic().getEncoded();
+	}
+
+
 	private void asyGenKeys() throws Exception{
 		KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
 		kpg.initialize(1024);
@@ -33,21 +37,77 @@ public class AsymmetricCrypto {
 
 		cipher = Cipher.getInstance("RSA");
 	}
-	
+
+	/**
+	 * 3DES Symmetric Encryption
+	 * 
+	 * @param  plaintext
+	 * @param  key byte array
+	 * @return   encrypted byte array
+	 */
+	public byte[] EncText(String plainText, byte[] keyBytes, String mode) throws Exception {
+		byte[] cipherBytes = null;
+		byte[] plainBytes = plainText.getBytes(); 			
+
+		cipherBytes = asyEncrypt(plainBytes);
+
+		return cipherBytes;
+	}
+
+	/**
+	 * 3DES Symmetric Encryption
+	 * 
+	 * @param  cipher byte array
+	 * @param  key byte array
+	 * @return   plain text message
+	 */
+	public String DecText(byte[] cipherBytes, byte[] keyBytes, String mode)throws Exception{
+		String plainText = "";
+		byte[] plainBytes;
+
+		plainBytes = asyDecrypt(cipherBytes);
+
+		plainText = new String(plainBytes, "UTF-8");
+
+		return plainText;
+	}
+
+
+	public byte[] asyEncrypt(byte[] plainBytes) throws Exception{
+		return asyEncrypt(plainBytes, null);
+	}
+
 	// MUST RECEIVE A PUBLIC KEY, AND ALSO ENCRYPT USING THEIR OWN PRIVATE
-	public byte[] asyEncrypt(byte[] plainBytes) throws Exception{		
-		cipher.init(Cipher.ENCRYPT_MODE, keypair.getPrivate());
+	public byte[] asyEncrypt(byte[] plainBytes, byte[] keyBytes) throws Exception{		
+		if (keyBytes != null){
+			// test line below, otherwise need to receive the PublicKey via parameter
+			PublicKey publicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(keyBytes));
+			cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+		}else{
+			cipher.init(Cipher.ENCRYPT_MODE, keypair.getPrivate());
+		}
+
 		byte[] bytes = plainBytes;
 		byte[] cipherBytes = asyBlockCipher(bytes,Cipher.ENCRYPT_MODE);		
 		return cipherBytes;
 	}
 
 	public byte[] asyDecrypt(byte[] cipherBytes) throws Exception{
-		cipher.init(Cipher.DECRYPT_MODE, keypair.getPublic());		
+		return asyDecrypt(cipherBytes, null);
+	}
+
+	public byte[] asyDecrypt(byte[] cipherBytes, byte[] keyBytes) throws Exception{
+		if (keyBytes != null){
+			// test line below, otherwise need to receive the PublicKey via parameter
+			PublicKey publicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(keyBytes));
+			cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+		}else{
+			cipher.init(Cipher.DECRYPT_MODE, keypair.getPublic());
+		}				
 		byte[] plainBytes = asyBlockCipher(cipherBytes,Cipher.DECRYPT_MODE);
 		return plainBytes;
 	}
-	
+
 	private byte[] asyBlockCipher(byte[] plainBytes, int mode) throws IllegalBlockSizeException, BadPaddingException{
 		// string initialize 2 buffers.
 		// scrambled will hold intermediate results
@@ -74,7 +134,7 @@ public class AsymmetricCrypto {
 
 				// if newlength would be longer than remaining bytes in the bytes array we shorten it.
 				if (i + length > plainBytes.length) {
-					 newlength = plainBytes.length - i;
+					newlength = plainBytes.length - i;
 				}
 				// clean the buffer array
 				buffer = new byte[newlength];
@@ -92,7 +152,7 @@ public class AsymmetricCrypto {
 
 		return toReturn;
 	}
-	
+
 	private byte[] asyAppend(byte[] prefix, byte[] suffix){
 		byte[] toReturn = new byte[prefix.length + suffix.length];
 		for (int i=0; i< prefix.length; i++){
