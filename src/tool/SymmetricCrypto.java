@@ -1,12 +1,5 @@
 package tool;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
@@ -17,7 +10,7 @@ public class SymmetricCrypto {
 	public SymmetricCrypto(){
 		
 	}
-	
+	/*
 	public byte[] encObject(Object plainObject, byte[] keyBytes) throws Exception {
 		byte[] cipherBytes = null;
 		byte[] plainBytes =  serialize(plainObject); 			
@@ -34,19 +27,6 @@ public class SymmetricCrypto {
 		return plainObject;
 	}
 
-	public static byte[] serialize(Object obj) throws IOException {
-	    ByteArrayOutputStream out = new ByteArrayOutputStream();
-	    ObjectOutputStream os = new ObjectOutputStream(out);
-	    os.writeObject(obj);
-	    return out.toByteArray();
-	}
-	
-	public static Object deserialize(byte[] data) throws IOException, ClassNotFoundException {
-	    ByteArrayInputStream in = new ByteArrayInputStream(data);
-	    ObjectInputStream is = new ObjectInputStream(in);
-	    return is.readObject();
-	}
-	
 	public byte[] encText(String plainText, byte[] keyBytes) throws Exception {
 		byte[] cipherBytes = null;
 		byte[] plainBytes = plainText.getBytes(); 			
@@ -62,7 +42,7 @@ public class SymmetricCrypto {
 		return plainText;
 		
 	}
-
+*/
 	public byte[] encrypt(byte[] plainBytes, byte[] keyBytes) throws Exception {
 		final SecretKey key = new SecretKeySpec(keyBytes, "DESede");
 		final IvParameterSpec iv = new IvParameterSpec(new byte[8]);

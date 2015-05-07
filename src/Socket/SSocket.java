@@ -1,6 +1,7 @@
 package Socket;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -55,7 +56,7 @@ public class SSocket {
 		//TODO:  IMPLEMENT!
 	}
 	
-	public void sendObject(Object object, String address) throws Exception{
+	public void sendObject(Serializable object, String address) throws Exception{
 		Peer peer = use(address);
 
 		SSocketComunicator sscommunicator = new SSocketComunicator(symCrypto, socket, peer);
@@ -99,7 +100,6 @@ public class SSocket {
 	}
 
 	private int indexOfPeer(String address){
-		boolean isThere = false;
 		for (Peer peer : peers) {
 			return peers.indexOf(peer);				
 		}
