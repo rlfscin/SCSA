@@ -32,13 +32,7 @@ public class AsymmetricCrypto {
 		cipher = Cipher.getInstance("RSA");
 	}
 
-	/**
-	 * RSA Asymmetric Encryption - uses encrypt()
-	 * 
-	 * @param  plaintext
-	 * @param  key byte array
-	 * @return   encrypted byte array
-	 */
+	/*
 	public byte[] encText(String plainText, byte[] keyBytes) throws Exception {
 		byte[] cipherBytes = null;
 		byte[] plainBytes = plainText.getBytes();
@@ -46,13 +40,6 @@ public class AsymmetricCrypto {
 		return cipherBytes;
 	}
 
-	/**
-	 * RSA Asymmetric Encryption - uses decrypt()
-	 * 
-	 * @param  cipher byte array
-	 * @param  key byte array
-	 * @return   plain text message
-	 */
 	public String decText(byte[] cipherBytes, byte[] keyBytes)throws Exception{
 		String plainText = "";
 		byte[] plainBytes;
@@ -60,7 +47,7 @@ public class AsymmetricCrypto {
 		plainText = new String(plainBytes, "UTF-8");
 		return plainText;
 	}
-
+	 */
 
 	public byte[] encrypt(byte[] plainBytes) throws Exception{
 		return encrypt(plainBytes, null);

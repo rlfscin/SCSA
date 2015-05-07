@@ -18,7 +18,7 @@ public class SymmetricCrypto {
 		
 	}
 	
-	public byte[] encObject(Serializable plainObject, byte[] keyBytes) throws Exception {
+	public byte[] encObject(Object plainObject, byte[] keyBytes) throws Exception {
 		byte[] cipherBytes = null;
 		byte[] plainBytes =  serialize(plainObject); 			
 		cipherBytes = encrypt(plainBytes, keyBytes);		
@@ -26,25 +26,25 @@ public class SymmetricCrypto {
 		return cipherBytes;
 	}
 	
-	public Serializable decObject(byte[] cipherBytes, byte[] keyBytes)throws Exception{
-		Serializable plainObject;
+	public Object decObject(byte[] cipherBytes, byte[] keyBytes)throws Exception{
+		Object plainObject;
 		byte[] plainBytes;
 		plainBytes = decrypt(cipherBytes, keyBytes);
 		plainObject = new String(plainBytes, "UTF-8");
 		return plainObject;
 	}
 
-	public static byte[] serialize(Serializable obj) throws IOException {
+	public static byte[] serialize(Object obj) throws IOException {
 	    ByteArrayOutputStream out = new ByteArrayOutputStream();
 	    ObjectOutputStream os = new ObjectOutputStream(out);
 	    os.writeObject(obj);
 	    return out.toByteArray();
 	}
 	
-	public static Serializable deserialize(byte[] data) throws IOException, ClassNotFoundException {
+	public static Object deserialize(byte[] data) throws IOException, ClassNotFoundException {
 	    ByteArrayInputStream in = new ByteArrayInputStream(data);
 	    ObjectInputStream is = new ObjectInputStream(in);
-	    return (Serializable)is.readObject();
+	    return is.readObject();
 	}
 	
 	public byte[] encText(String plainText, byte[] keyBytes) throws Exception {
