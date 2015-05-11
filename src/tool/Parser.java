@@ -9,10 +9,10 @@ import java.io.Serializable;
 
 public class Parser {
 	
-	public static Object parseObject(byte[] data) throws IOException, ClassNotFoundException{
+	public static Serializable parseObject(byte[] data) throws IOException, ClassNotFoundException{
 		ByteArrayInputStream in = new ByteArrayInputStream(data);
 		ObjectInputStream is = new ObjectInputStream(in);
-		return (Serializable)is.readObject();
+		return (Serializable) is.readObject();
 	}
 	
 	public static byte[] parseByte(Serializable obj) throws IOException{

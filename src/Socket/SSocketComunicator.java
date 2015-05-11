@@ -1,14 +1,7 @@
 package Socket;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.net.Socket;
@@ -49,7 +42,7 @@ public class SSocketComunicator {
 		flush(cipherBytes);
 	}
 
-	public Object receiveObject() throws IOException, Exception{
+	public Serializable receiveObject() throws IOException, Exception{
 		
 		//TODO check fragments
 		byte[] plainBasketBytes = symCrypto.decrypt(read(), peer.sessionKey);
@@ -96,6 +89,9 @@ public class SSocketComunicator {
 		bos.close();
 		 */
 	}
+	
+	/*
+	//dangers zone 
 
 	public void sendText(String message) throws Exception{
 		// using flush directly is TEMPORARY!! Basket (class) will create header, tell peer about the data type and check cryptography, ALL before flush
@@ -122,7 +118,12 @@ public class SSocketComunicator {
 		Basket basket = (Basket)Parser.parseObject(basketBytes);
 		return basket.getData(); 
 	}
+	private boolean isUp(){
+		// check working cryptography before sending bytes
+		return false;
+	}
 
+	*/
 
 	//do NOT used directly! no cryptography implemented
 	private void flush(byte[] bytes) throws IOException{
@@ -139,9 +140,5 @@ public class SSocketComunicator {
 		return bytes;
 	}
 
-	private boolean isUp(){
-		// check working cryptography before sending bytes
-		return false;
-	}
 
 }

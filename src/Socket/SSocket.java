@@ -12,13 +12,23 @@ import tool.AsymmetricCrypto;
 import tool.SymmetricCrypto;
 
 public class SSocket {
-	private AsymmetricCrypto asyCrypto;
-	private SymmetricCrypto symCrypto;
 	private Socket socket;
 	private ArrayList<Peer> peers; // array of the class that will store a single peer = (address + session Key)
+	
+	private AsymmetricCrypto asyCrypto;
+	
+	//Server
 	private String serverAddress;
 	private int serverPort;
 	private PublicKey serverPublicKey;
+	
+	
+	//Client
+	private boolean connected;
+	private String clienctAddress;
+	private int clientPort;
+	private SymmetricCrypto symCrypto;
+	private SSocketComunicator sscoketComunicator;
 
 	public SSocket(String serverAddress, int serverPort) {
 		try {
@@ -27,6 +37,9 @@ public class SSocket {
 			socket = null;
 			this.serverAddress = serverAddress;
 			this.serverPort = serverPort;
+			
+			this.clienctAddress = null;
+			this.sscoketComunicator = null;
 
 			serverPublicKey = logon();
 		} catch (Exception e) {
@@ -36,7 +49,7 @@ public class SSocket {
 	}
 	
 	private PublicKey logon() throws UnknownHostException, IOException{
-		this.socket = new Socket(serverAddress, serverPort);
+		Socket socket = new Socket(serverAddress, serverPort);
 		// socket opened inside the authenticator
 		SSocketAuthenticator ssAuthenticator = new SSocketAuthenticator(asyCrypto, socket);
 		PublicKey serverkey = ssAuthenticator.authenticate();
@@ -44,17 +57,39 @@ public class SSocket {
 		return serverkey;
 	}
 
+	public void connect(String ip, int port) throws UnknownHostException, IOException{
+		Socket socket = new Socket(ip, port);
+		sscoketComunicator = new SSocketComunicator(null, socket, null);
+	}
+	
 	public void sendFile(String filename, String address) throws Exception{
+		//TODO fix
 		Peer peer = use(address);
 
 		SSocketComunicator sscommunicator = new SSocketComunicator(symCrypto, socket, peer);
 		//sscommunicator.sendFile(filename);
+	}
+	
+	public void send(Serializable obj) throws Exception{
+		//TODO error connection
+		sscoketComunicator.sendObject(obj);
 	}
 
 	public void receiveFile(){
 		// TODO: IMPLEMENT!
 	}
 	
+	public Serializable receive() throws IOException, Exception{
+		//TODO error connection
+		return sscoketComunicator.receiveObject();
+	}
+	
+	
+	/*
+	 * 
+	 * Danger zone
+	 */
+	/*
 	public void sendText(String message, String address) throws Exception{
 		Peer peer = use(address);
 
@@ -62,6 +97,7 @@ public class SSocket {
 		sscommunicator.sendText(message);
 	}	
 	
+	*/
 	public void receiveText(){
 		//TODO:  IMPLEMENT!
 	}
@@ -73,10 +109,6 @@ public class SSocket {
 		sscommunicator.sendObject(object);
 	}	
 	
-	public void receiveObject(){
-		//TODO:  IMPLEMENT!
-	}
-
 	
 
 	
@@ -123,5 +155,4 @@ public class SSocket {
 		// used to validate if peer gotten from server is up.
 		return false;
 	}
-	
 }
