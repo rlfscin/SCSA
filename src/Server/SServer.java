@@ -6,7 +6,6 @@ import java.net.Socket;
 public class SServer extends Thread{
 	private ServerSocket serverSocket;
 	private SServerData sSerterData;
-	private SServer sserver;
 	private int port;
 	
 	public SServer(String args[]) {
@@ -21,11 +20,12 @@ public class SServer extends Thread{
 				thread = true;
 			}
 		}
+		
 		if(thread){
-			sserver.start();
+			start();
 		}
 		else{
-			sserver.connect();
+			connect();
 		}
 	}
 

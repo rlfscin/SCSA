@@ -20,8 +20,8 @@ public class AsymmetricCrypto {
 		asyGenKeys();
 	}
 
-	public byte[] getPublicKey(){		
-		return keypair.getPublic().getEncoded();
+	public PublicKey getPublicKey(){		
+		return keypair.getPublic();
 	}
 
 	private void asyGenKeys() throws Exception{
@@ -54,10 +54,10 @@ public class AsymmetricCrypto {
 	}
 
 	// MUST RECEIVE A PUBLIC KEY, AND ALSO ENCRYPT USING THEIR OWN PRIVATE
-	public byte[] encrypt(byte[] plainBytes, byte[] keyBytes) throws Exception{		
-		if (keyBytes != null){
+	public byte[] encrypt(byte[] plainBytes, PublicKey publicKey) throws Exception{		
+		if (publicKey != null){
 			// test line below, otherwise need to receive the PublicKey via parameter
-			PublicKey publicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(keyBytes));
+			//PublicKey publicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(keyBytes));
 			cipher.init(Cipher.ENCRYPT_MODE, publicKey);
 		}else{
 			cipher.init(Cipher.ENCRYPT_MODE, keypair.getPrivate());
@@ -72,13 +72,13 @@ public class AsymmetricCrypto {
 		return decrypt(cipherBytes, null);
 	}
 
-	public byte[] decrypt(byte[] cipherBytes, byte[] keyBytes) throws Exception{
-		if (keyBytes != null){
+	public byte[] decrypt(byte[] cipherBytes, PublicKey publicKey) throws Exception{
+		if (publicKey != null){
 			// test line below, otherwise need to receive the PublicKey via parameter
-			PublicKey publicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(keyBytes));
+			//PublicKey publicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(keyBytes));
 			cipher.init(Cipher.ENCRYPT_MODE, publicKey);
 		}else{
-			cipher.init(Cipher.DECRYPT_MODE, keypair.getPublic());
+			cipher.init(Cipher.DECRYPT_MODE, keypair.getPrivate());
 		}				
 		byte[] plainBytes = blockCipher(cipherBytes,Cipher.DECRYPT_MODE);
 		return plainBytes;

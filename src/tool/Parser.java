@@ -16,6 +16,7 @@ public class Parser {
 	}
 	
 	public static byte[] parseByte(Serializable obj) throws IOException{
+		if(obj == null) return null;
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		ObjectOutputStream os = new ObjectOutputStream(out);
 		os.writeObject(obj);

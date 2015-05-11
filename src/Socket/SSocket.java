@@ -48,11 +48,12 @@ public class SSocket {
 		}
 	}
 	
-	private PublicKey logon() throws UnknownHostException, IOException{
+	private PublicKey logon() throws UnknownHostException, IOException, ClassNotFoundException{
 		Socket socket = new Socket(serverAddress, serverPort);
 		// socket opened inside the authenticator
 		SSocketAuthenticator ssAuthenticator = new SSocketAuthenticator(asyCrypto, socket);
 		PublicKey serverkey = ssAuthenticator.authenticate();
+		System.out.println("Chave do servidor "+serverkey);
 		socket.close();
 		return serverkey;
 	}
