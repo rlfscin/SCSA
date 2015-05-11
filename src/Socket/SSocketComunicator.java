@@ -14,6 +14,7 @@ import java.io.Serializable;
 import java.net.Socket;
 
 import tool.Basket;
+import tool.Header;
 import tool.SymmetricCrypto;
 
 public class SSocketComunicator {
@@ -38,7 +39,7 @@ public class SSocketComunicator {
 
 	public void sendObject(Serializable plainObject) throws Exception{
 		byte[] data = serialize(plainObject);
-		Basket basket = new Basket(data);
+		Basket basket = new Basket(Header.SendData, data);
 
 		byte[] cipherBytes = symCrypto.encrypt(serialize(basket), peer.sessionKey);
 
@@ -51,7 +52,8 @@ public class SSocketComunicator {
 
 		return basket.getData();
 	}
-
+	/*
+	 *We need to talk how we gonna send the files.
 	//need to test
 	public void sendFile(String filename) throws Exception{	
 		File f = new File(filename);
@@ -70,7 +72,7 @@ public class SSocketComunicator {
 		Basket basket = new Basket(baos.toByteArray());		
 		flush(symCrypto.encrypt(serialize(basket), peer.sessionKey));
 	}
-
+	*/
 	//need to test, correct
 	public void receiveFile() throws IOException{
 		/*
@@ -93,7 +95,7 @@ public class SSocketComunicator {
 	public void sendText(String message) throws Exception{
 		// using flush directly is TEMPORARY!! Basket (class) will create header, tell peer about the data type and check cryptography, ALL before flush
 		byte[] data = serialize(message);
-		Basket basket = new Basket(data);
+		Basket basket = new Basket(Header.SendData, data);
 		flush(symCrypto.encrypt(serialize(basket), peer.sessionKey));
 	}
 
@@ -106,7 +108,7 @@ public class SSocketComunicator {
 
 	public void sendBytes(byte[] bytes) throws Exception{	
 		// using flush directly is TEMPORARY!! Basket (class) will create header, tell peer about the data type and check cryptography, ALL before flush
-		Basket basket = new Basket(bytes);
+		Basket basket = new Basket(Header.SendData, bytes);
 		flush(symCrypto.encrypt(serialize(basket), peer.sessionKey));	
 	}
 

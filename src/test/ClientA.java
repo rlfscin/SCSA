@@ -15,7 +15,7 @@ public class ClientA {
 
 		}
 		 */
-		SSocket socket = new SSocket(null, 0);
+		SSocket socket = new SSocket("localhost", 5999);
 	}
 
 }

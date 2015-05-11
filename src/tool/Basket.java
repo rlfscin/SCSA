@@ -6,17 +6,21 @@ public class Basket implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -1186247562604839067L;
-	//enum?
-	//header?
-	byte[] data;
+	private static final long serialVersionUID = 1186247562604839067L;
 	
-	public Basket(byte[] data){
+	private Header header;
+	private byte[] data;
+	
+	public Basket(Header header, byte[] data){
 		this.data = data;
 	}
 	
 	public byte[] getData(){
-		return null;
+		return this.data;
 		
+	}
+	
+	public Header getHeader(){
+		return this.header;
 	}
 }

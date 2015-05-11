@@ -4,23 +4,47 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class SServer {
+public class SServer extends Thread{
 	private ServerSocket serverSocket;
 	private SServerData sSerterData;
+	private SServer sserver;
 	private int port;
+	
+	public SServer(String args[]) {
+		boolean thread = false;
+		port = 5999;
+		for (int i = 0; i < args.length; i++) {
+			if(args[i].equals("-p")){
+				i++;
+				port  = Integer.parseInt(args[i]);
+			}
+			else if(args[i].equals("-t")){
+				thread = true;
+			}
+		}
+		if(thread){
+			sserver.start();
+		}
+		else{
+			sserver.connect();
+		}
+	}
 
-	public SServer(int port) throws Exception{
-		this.port = port;
-		sSerterData = new SServerData();
+	private void connect(){
 		try {
-			serverSocket = new ServerSocket(this.port);
+			sSerterData = new SServerData();
+			serverSocket = new ServerSocket(port);
 			while(true){
 				Socket socket = serverSocket.accept();
 				(new SServerComunicator(socket, sSerterData)).start();
 			}
-		} catch (IOException e) {
-			System.err.println(this.port+" is being used.");
+		} catch (Exception e) {
+			System.err.println(port+" is being used.");
 			e.printStackTrace();
 		}
+	}
+	
+	public void run(){
+		connect();
 	}
 }

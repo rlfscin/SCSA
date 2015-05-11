@@ -30,7 +30,7 @@ public class SSocketAuthenticator {
 		}
 	}
 	
-	public byte[] authenticate() throws UnknownHostException, IOException {
+	public PublicKey authenticate() throws UnknownHostException, IOException {
 		PublicKey serverPublicKey = null;
 		
 		//socket = new Socket(InetAddress.getByName(serverAddress), port ,false);
@@ -47,7 +47,8 @@ public class SSocketAuthenticator {
 		socket.close();
 
 		// returns server's public to SSocket for later usage.
-		return serverPublicKey.getEncoded();
+		//return serverPublicKey.getEncoded();
+		return null;
 	}
 	
 	public byte[] requestSession(String address) throws UnknownHostException, IOException{

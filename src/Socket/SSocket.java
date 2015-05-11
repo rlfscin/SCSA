@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.security.PublicKey;
 import java.util.ArrayList;
 
 import tool.AsymmetricCrypto;
@@ -17,7 +18,7 @@ public class SSocket {
 	private ArrayList<Peer> peers; // array of the class that will store a single peer = (address + session Key)
 	private String serverAddress;
 	private int serverPort;
-	private byte[] serverPublicKey;
+	private PublicKey serverPublicKey;
 
 	public SSocket(String serverAddress, int serverPort) {
 		try {
@@ -33,12 +34,21 @@ public class SSocket {
 			e.printStackTrace();
 		}
 	}
+	
+	private PublicKey logon() throws UnknownHostException, IOException{
+		this.socket = new Socket(serverAddress, serverPort);
+		// socket opened inside the authenticator
+		SSocketAuthenticator ssAuthenticator = new SSocketAuthenticator(asyCrypto, socket);
+		PublicKey serverkey = ssAuthenticator.authenticate();
+		socket.close();
+		return serverkey;
+	}
 
 	public void sendFile(String filename, String address) throws Exception{
 		Peer peer = use(address);
 
 		SSocketComunicator sscommunicator = new SSocketComunicator(symCrypto, socket, peer);
-		sscommunicator.sendFile(filename);
+		//sscommunicator.sendFile(filename);
 	}
 
 	public void receiveFile(){
@@ -67,15 +77,9 @@ public class SSocket {
 		//TODO:  IMPLEMENT!
 	}
 
-	private byte[] logon() throws UnknownHostException, IOException{
-		this.socket = new Socket(InetAddress.getByName(serverAddress), serverPort);
-		// socket opened inside the authenticator
-		SSocketAuthenticator ssAuthenticator = new SSocketAuthenticator(asyCrypto, socket);
-		byte[] serverkey = ssAuthenticator.authenticate();
-		socket.close();
-		return serverkey;
-	}
+	
 
+	
 
 	private Peer use(String address) throws Exception{
 		int index = -1;
@@ -119,4 +123,5 @@ public class SSocket {
 		// used to validate if peer gotten from server is up.
 		return false;
 	}
+	
 }
