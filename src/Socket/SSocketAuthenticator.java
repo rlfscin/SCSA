@@ -3,10 +3,11 @@ package Socket;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.security.PublicKey;
+
+import javax.crypto.SecretKey;
 
 import tool.AsymmetricCrypto;
 import tool.Basket;
@@ -18,8 +19,8 @@ public class SSocketAuthenticator {
 	private DataInputStream inputStream;
 	private DataOutputStream outputStream;
 	private AsymmetricCrypto asyCrypto;
-	private String serverAddress;
-	private int port;
+	//private String serverAddress;
+	//private int port;
 	
 	public SSocketAuthenticator(AsymmetricCrypto asyCrypto, Socket socket){
 		try {
@@ -34,15 +35,33 @@ public class SSocketAuthenticator {
 		}
 	}
 	
-	public PublicKey authenticate() throws UnknownHostException, IOException, ClassNotFoundException {
-		
+	public PublicKey authenticate() throws Exception {
+		//requesting service
 		Basket basketRequest = new Basket(Header.GetPublicKey, null);
 		flush(Parser.parseByte(basketRequest));
-		Basket basketResponse = (Basket) Parser.parseObject(read());
+		
+		System.out.println("CLIENT: requesting public key"); // TEST MESSAGE, REMOVE LATER!!!
+		
+		// reading response
+		Basket basketResponse = (Basket) Parser.parseObject(read());		
+		
+		if (basketResponse.getHeader() == Header.SendPublicKey) 
+			System.out.println("Server's up. Authenticating." + System.lineSeparator()); // consider revising here later
+		
+		//sending my key!
+		Basket basketSendKey = new Basket(Header.SendPublicKey, Parser.parseByte(asyCrypto.getPublicKey()));
+		byte[] cipherBasketSendKey = asyCrypto.encrypt(Parser.parseByte(basketSendKey));
+		flush(cipherBasketSendKey);
+		
+		// test message 
+		System.out.println("CLIENT: my public key was sent!: " + Parser.parseByte(asyCrypto.getPublicKey())); // TEST MESSAGE, REMOVE LATER!!!
+		
+		//returning the key I got
 		return (PublicKey) Parser.parseObject(basketResponse.getData());
+		//authenticated.
 	}
 	
-	public byte[] requestSession(String address) throws UnknownHostException, IOException{
+	public SecretKey requestSession(String address) throws UnknownHostException, IOException{
 		
 		socket.close();
 		
@@ -58,8 +77,9 @@ public class SSocketAuthenticator {
 	//do NOT used directly! no cryptography implemented
 	private byte[] read() throws IOException{
 		//TODO receive the size of the basket
-		byte[] bytes = null;
+		byte[] bytes = null;		
 		inputStream.read(bytes);
+		System.out.println("read."); // TEST MESSAGE, REMOVE LATER!!!
 		return bytes;
 	}
 	

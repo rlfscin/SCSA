@@ -1,11 +1,8 @@
 package Server;
 
-import java.net.InetAddress;
 import java.security.PublicKey;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.crypto.Cipher;
 
 import tool.AsymmetricCrypto;
 
@@ -20,12 +17,8 @@ class SServerData {
 		map.put(host, key);
 		return true;
 	}
-	public PublicKey getKey(String host){
-		return map.get(host);
-	}
-	
-	public PublicKey getPublicKey(){
-		return asyCrypto.getPublicKey();
+	public PublicKey getKey(String address){
+		return map.get(address);
 	}
 	
 	public byte[] encrypt(byte[] plainBytes) throws Exception{

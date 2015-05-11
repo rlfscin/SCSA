@@ -2,11 +2,12 @@ package Socket;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.security.PublicKey;
 import java.util.ArrayList;
+
+import javax.crypto.SecretKey;
 
 import tool.AsymmetricCrypto;
 import tool.SymmetricCrypto;
@@ -48,12 +49,13 @@ public class SSocket {
 		}
 	}
 	
-	private PublicKey logon() throws UnknownHostException, IOException, ClassNotFoundException{
+	private PublicKey logon() throws Exception{
+		System.out.println("CLIENT: logging on."); // TEST MESSAGE, REMOVE LATER!!!
 		Socket socket = new Socket(serverAddress, serverPort);
 		// socket opened inside the authenticator
 		SSocketAuthenticator ssAuthenticator = new SSocketAuthenticator(asyCrypto, socket);
 		PublicKey serverkey = ssAuthenticator.authenticate();
-		System.out.println("Chave do servidor "+serverkey);
+		System.out.println("CLIENT: got server's key: " + serverkey); // TEST MESSAGE, REMOVE LATER!!!
 		socket.close();
 		return serverkey;
 	}
@@ -119,7 +121,7 @@ public class SSocket {
 		index = indexOfPeer(address);
 		if (index == -1){
 			SSocketAuthenticator sSocketAuthenticator = new SSocketAuthenticator(asyCrypto, socket);
-			byte[] sessionKey = sSocketAuthenticator.requestSession(address); 
+			SecretKey sessionKey = sSocketAuthenticator.requestSession(address); 
 			addPeer(address, sessionKey);
 		}
 		index = indexOfPeer(address);
@@ -129,7 +131,7 @@ public class SSocket {
 		return peers.get(index);
 	}
 
-	private void addPeer(String address, byte[] sessionKey) throws Exception{
+	private void addPeer(String address, SecretKey sessionKey) throws Exception{
 		int index = -1;
 		if ((index = indexOfPeer(address)) >= 0)
 			peers.set(index, (new Peer(address, sessionKey)));
