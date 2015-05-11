@@ -15,6 +15,7 @@ import java.net.Socket;
 
 import tool.Basket;
 import tool.Header;
+import tool.Parser;
 import tool.SymmetricCrypto;
 
 public class SSocketComunicator {
@@ -38,19 +39,23 @@ public class SSocketComunicator {
 	}
 
 	public void sendObject(Serializable plainObject) throws Exception{
-		byte[] data = serialize(plainObject);
+		
+		//TODO check fragments
+		byte[] data = Parser.parseByte(plainObject);
 		Basket basket = new Basket(Header.SendData, data);
 
-		byte[] cipherBytes = symCrypto.encrypt(serialize(basket), peer.sessionKey);
+		byte[] cipherBytes = symCrypto.encrypt(Parser.parseByte(basket), peer.sessionKey);
 
 		flush(cipherBytes);
 	}
 
 	public Object receiveObject() throws IOException, Exception{
+		
+		//TODO check fragments
 		byte[] plainBasketBytes = symCrypto.decrypt(read(), peer.sessionKey);
-		Basket basket = (Basket)deserialize(plainBasketBytes);
+		Basket basket = (Basket)Parser.parseObject(plainBasketBytes);
 
-		return basket.getData();
+		return Parser.parseObject(basket.getData());
 	}
 	/*
 	 *We need to talk how we gonna send the files.
@@ -94,51 +99,41 @@ public class SSocketComunicator {
 
 	public void sendText(String message) throws Exception{
 		// using flush directly is TEMPORARY!! Basket (class) will create header, tell peer about the data type and check cryptography, ALL before flush
-		byte[] data = serialize(message);
+		byte[] data = Parser.parseByte(message);
 		Basket basket = new Basket(Header.SendData, data);
-		flush(symCrypto.encrypt(serialize(basket), peer.sessionKey));
+		flush(symCrypto.encrypt(Parser.parseByte(basket), peer.sessionKey));
 	}
 
 	public String receiveText() throws Exception{
 		byte[] basketBytes = symCrypto.decrypt(read(), peer.sessionKey);
-		Basket basket = (Basket)deserialize(basketBytes);
-		String message = (String)deserialize(basket.getData());
+		Basket basket = (Basket)Parser.parseObject(basketBytes);
+		String message = (String)Parser.parseObject(basket.getData());
 		return message;
 	}
 
 	public void sendBytes(byte[] bytes) throws Exception{	
 		// using flush directly is TEMPORARY!! Basket (class) will create header, tell peer about the data type and check cryptography, ALL before flush
 		Basket basket = new Basket(Header.SendData, bytes);
-		flush(symCrypto.encrypt(serialize(basket), peer.sessionKey));	
+		flush(symCrypto.encrypt(Parser.parseByte(basket), peer.sessionKey));	
 	}
 
 	public byte[] receiveBytes() throws Exception{
 		byte[] basketBytes = symCrypto.decrypt(read(), peer.sessionKey);
-		Basket basket = (Basket)deserialize(basketBytes);
+		Basket basket = (Basket)Parser.parseObject(basketBytes);
 		return basket.getData(); 
 	}
 
-	public static byte[] serialize(Serializable obj) throws IOException {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		ObjectOutputStream os = new ObjectOutputStream(out);
-		os.writeObject(obj);
-		return out.toByteArray();
-	}
-
-	public static Serializable deserialize(byte[] data) throws IOException, ClassNotFoundException {
-		ByteArrayInputStream in = new ByteArrayInputStream(data);
-		ObjectInputStream is = new ObjectInputStream(in);
-		return (Serializable)is.readObject();
-	}
 
 	//do NOT used directly! no cryptography implemented
-	private void flush(byte[] bytes) throws IOException{		
+	private void flush(byte[] bytes) throws IOException{
+		//TODO send the size of the basket
 		outputStream.write(bytes);
 		socket.shutdownOutput();	
 	}
 
 	//do NOT used directly! no cryptography implemented
 	private byte[] read() throws IOException{
+		//TODO receive the size of the basket
 		byte[] bytes = null;
 		inputStream.read(bytes);
 		return bytes;
