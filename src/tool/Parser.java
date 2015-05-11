@@ -23,7 +23,4 @@ public class Parser {
 		return out.toByteArray();
 	}
 	
-	
-	//final SecretKey key = new SecretKeySpec(keyBytes, "DESede");
-	
 }

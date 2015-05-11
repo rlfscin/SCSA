@@ -3,22 +3,25 @@ package Server;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import tool.AsymmetricCrypto;
-
 public class SServer extends Thread{
 	private ServerSocket serverSocket;
-	private SServerData sServerData;
+	private SServerData sSerterData;
 	private int port;
-	private AsymmetricCrypto asymmetricCrypto;
 	
-	public SServer(int port, boolean thread) throws Exception {
-		//generate my pair of keys
-		asymmetricCrypto = new AsymmetricCrypto();		
+	public SServer(String args[]) {
+		boolean thread = false;
+		port = 5999;
+		for (int i = 0; i < args.length; i++) {
+			if(args[i].equals("-p")){
+				i++;
+				port  = Integer.parseInt(args[i]);
+			}
+			else if(args[i].equals("-t")){
+				thread = true;
+			}
+		}
 		
-		boolean isThread = thread;
-		this.port = port;
-		
-		if(isThread){
+		if(thread){
 			start();
 		}
 		else{
@@ -28,14 +31,11 @@ public class SServer extends Thread{
 
 	private void connect(){
 		try {
-			sServerData = new SServerData();
+			sSerterData = new SServerData();
 			serverSocket = new ServerSocket(port);
 			while(true){
-				Socket socket = serverSocket.accept();				
-				
-				System.out.println("SERVER: connected."); // TEST MESSAGE, REMOVE LATER!!!
-				
-				(new SServerComunicator(socket, sServerData, asymmetricCrypto)).start();
+				Socket socket = serverSocket.accept();
+				(new SServerComunicator(socket, sSerterData)).start();
 			}
 		} catch (Exception e) {
 			System.err.println(port+" is being used.");
