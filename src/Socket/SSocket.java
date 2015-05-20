@@ -54,6 +54,7 @@ public class SSocket {
 		SSocketAuthenticator ssAuthenticator = new SSocketAuthenticator(asyCrypto, socket);
 		PublicKey serverkey = ssAuthenticator.authenticate();
 		System.out.println("Chave do servidor "+serverkey);
+		
 		socket.close();
 		return serverkey;
 	}
@@ -65,9 +66,9 @@ public class SSocket {
 	
 	public void sendFile(String filename, String address) throws Exception{
 		//TODO fix
-		Peer peer = use(address);
+		//Peer peer = use(address);
 
-		SSocketComunicator sscommunicator = new SSocketComunicator(symCrypto, socket, peer);
+		//SSocketComunicator sscommunicator = new SSocketComunicator(symCrypto, socket, peer);
 		//sscommunicator.sendFile(filename);
 	}
 	
