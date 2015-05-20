@@ -135,7 +135,7 @@ public class SSocketComunicator {
 	//do NOT used directly! no cryptography implemented
 	private byte[] read() throws IOException{
 		//TODO receive the size of the basket
-		byte[] bytes = null;
+		byte[] bytes = new byte[2048];
 		inputStream.read(bytes);
 		return bytes;
 	}

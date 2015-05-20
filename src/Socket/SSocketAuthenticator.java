@@ -23,11 +23,10 @@ public class SSocketAuthenticator {
 	
 	public SSocketAuthenticator(AsymmetricCrypto asyCrypto, Socket socket){
 		try {
+			this.socket = socket;
 			this.inputStream = new DataInputStream(this.socket.getInputStream());
 			this.outputStream = new DataOutputStream(this.socket.getOutputStream());
-			this.asyCrypto = asyCrypto;
-			this.socket = socket;
-			
+			this.asyCrypto = asyCrypto;		
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -58,7 +57,7 @@ public class SSocketAuthenticator {
 	//do NOT used directly! no cryptography implemented
 	private byte[] read() throws IOException{
 		//TODO receive the size of the basket
-		byte[] bytes = null;
+		byte[] bytes = new byte[2048];
 		inputStream.read(bytes);
 		return bytes;
 	}

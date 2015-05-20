@@ -77,9 +77,9 @@ class SServerComunicator extends Thread{
 	//do NOT used directly! no cryptography implemented
 	private byte[] read() throws IOException{
 		//TODO receive the size of the basket
-		byte[] bytes = null;
-		System.out.println(inputStream == null);
+		byte[] bytes = new byte[2048];
 		inputStream.read(bytes);
+		System.out.println(bytes); // REMOVE LATER
 		return bytes;
 	}
 }
