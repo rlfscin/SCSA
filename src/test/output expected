@@ -1,0 +1,15 @@
+========================AUTHENTICATE=================================
+
+server
+
+SERVER: connected.
+SERVER: GetPublicKey: sending key:  .................
+SERVER: SendPublicKey: storing key: ..................
+
+
+client
+
+CLIENT: requesting public key
+Server's up. Authenticating.
+CLIENT: my public key was sent!: ........
+CLIENT: got server's key: ................
