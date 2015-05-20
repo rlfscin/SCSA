@@ -1,27 +1,21 @@
 package test;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
-
-import Server.AuthenticationServer;
 import Server.SServer;
 import Socket.SSocket;
 
 public class Authentication {
-	
-	SServer server;
-	SSocket client1;
-	
-	public void setUp(){
-		String args[] = new String[0];
-		server = new SServer(args);
-		client1 = new SSocket("localhost", 5999);
+
+	public static void main(String[] args) {
+		try {
+			SServer sserver = new SServer(5999, false);
+			SSocket socket = new SSocket("localhost", 5999);
+			
+			System.out.println("done."); // TEST MESSAGE, REMOVE LATER!!!
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
-
-	@Test
-	public void testGetPublicKey(){
-		//server.
-	}
 }
