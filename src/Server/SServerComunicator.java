@@ -54,7 +54,7 @@ class SServerComunicator extends Thread{
 					
 					//test message
 					System.out.println("SERVER: GetPublicKey: sending key:  " + asymmetricCrypto.getPublicKey()); // TEST MESSAGE, REMOVE LATER!! 
-					System.out.println("SERVER: GetPublicKey: sending key:  " + asymmetricCrypto.getPublicKey().hashCode()); // TEST MESSAGE, REMOVE LATER!! 
+					System.out.println("SERVER: GetPublicKey: sending key HASH:  " + asymmetricCrypto.getPublicKey().hashCode()); // TEST MESSAGE, REMOVE LATER!! 
 				}
 				continue;
 			} catch (Exception e){
