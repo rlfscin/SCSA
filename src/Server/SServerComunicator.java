@@ -56,7 +56,7 @@ class SServerComunicator extends Thread{
 					System.out.println("SERVER: GetPublicKey: sending key:  " + asymmetricCrypto.getPublicKey()); // TEST MESSAGE, REMOVE LATER!! 
 				}
 				continue;
-			} catch (ClassNotFoundException e){
+			} catch (Exception e){
 				//empty
 			}
 			byte[] cipherBasket = sServerData.decrypt(input);
