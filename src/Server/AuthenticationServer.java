@@ -1,5 +1,7 @@
 package Server;
 
+import tool.SymmetricCrypto;
+
 public class AuthenticationServer {
 
 	public static void main(String[] args) {
@@ -19,6 +21,7 @@ public class AuthenticationServer {
 			new SServer(port, thread);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
 

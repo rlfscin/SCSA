@@ -57,7 +57,7 @@ class SServerComunicator extends Thread{
 				}
 				continue;
 			} catch (Exception e){
-				System.out.println("SERVER: The basket is crypted"); // TEST MESSAGE, REMOVE LATER!! 
+				//System.out.println("SERVER: The basket couldn't be read."); // TEST MESSAGE, REMOVE LATER!! 
 			}
 			byte[] cipherBasket = sServerData.decrypt(input);
 			// treat if not possible to convert to basket

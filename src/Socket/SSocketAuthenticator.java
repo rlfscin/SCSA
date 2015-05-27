@@ -44,20 +44,25 @@ public class SSocketAuthenticator {
 		
 		// reading response
 		Basket basketResponse = (Basket) Parser.parseObject(read());		
+		PublicKey serverPublicKey = (PublicKey) Parser.parseObject(basketResponse.getData());
 		
 		if (basketResponse.getHeader() == Header.SendPublicKey) 
 			System.out.println("Server's up. Authenticating." + System.lineSeparator()); // consider revising here later
 		
 		//sending my key!
 		Basket basketSendKey = new Basket(Header.SendPublicKey, Parser.parseByte(asyCrypto.getPublicKey()));
-		byte[] cipherBasketSendKey = asyCrypto.encrypt(Parser.parseByte(basketSendKey));
+		
+		System.out.println("CLIENT: this is my request size: " + Parser.parseByte(basketSendKey).length); // TEST MESSAGE, REMOVE LATER!!!
+		byte[] cipherBasketSendKey = asyCrypto.encrypt(Parser.parseByte(basketSendKey), serverPublicKey);
+		System.out.println("CLIENT: this is the server pub. key: " + serverPublicKey); // TEST MESSAGE, REMOVE LATER!!!
+		System.out.println("CLIENT: this is my ENCRYPTED request size: " + cipherBasketSendKey.length); // TEST MESSAGE, REMOVE LATER!!!
 		flush(cipherBasketSendKey);
 		
 		// test message 
 		System.out.println("CLIENT: my public key was sent!: " + Parser.parseByte(asyCrypto.getPublicKey())); // TEST MESSAGE, REMOVE LATER!!!
 		
 		//returning the key I got
-		return (PublicKey) Parser.parseObject(basketResponse.getData());
+		return serverPublicKey;
 		//authenticated.
 	}
 	
