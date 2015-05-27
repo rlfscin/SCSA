@@ -13,6 +13,7 @@ public class Basket implements Serializable {
 	
 	public Basket(Header header, byte[] data){
 		this.data = data;
+		this.header = header;
 	}
 	
 	public byte[] getData(){

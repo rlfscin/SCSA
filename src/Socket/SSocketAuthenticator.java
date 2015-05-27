@@ -71,7 +71,7 @@ public class SSocketAuthenticator {
 	private void flush(byte[] bytes) throws IOException{
 		//TODO send the size of the basket
 		outputStream.write(bytes);
-		socket.shutdownOutput();	
+		//socket.shutdownOutput();	
 	}
 
 	//do NOT used directly! no cryptography implemented
