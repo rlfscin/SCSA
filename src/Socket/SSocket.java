@@ -26,7 +26,7 @@ public class SSocket {
 	
 	//Client
 	private boolean connected;
-	private String clienctAddress;
+	private String clientAddress;
 	private int clientPort;
 	private SymmetricCrypto symCrypto;
 	private SSocketComunicator sscoketComunicator;
@@ -39,7 +39,7 @@ public class SSocket {
 			this.serverAddress = serverAddress;
 			this.serverPort = serverPort;
 			
-			this.clienctAddress = null;
+			this.clientAddress = null;
 			this.sscoketComunicator = null;
 
 			serverPublicKey = logon();

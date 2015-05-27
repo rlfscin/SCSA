@@ -54,7 +54,7 @@ public class SSocketAuthenticator {
 		
 		System.out.println("CLIENT: this is my request size: " + Parser.parseByte(basketSendKey).length); // TEST MESSAGE, REMOVE LATER!!!
 		byte[] cipherBasketSendKey = asyCrypto.encrypt(Parser.parseByte(basketSendKey), serverPublicKey);
-		System.out.println("CLIENT: this is the server pub. key: " + serverPublicKey); // TEST MESSAGE, REMOVE LATER!!!
+		System.out.println("CLIENT: this is the server pub. key: " + serverPublicKey.hashCode()); // TEST MESSAGE, REMOVE LATER!!!
 		System.out.println("CLIENT: this is my ENCRYPTED request size: " + cipherBasketSendKey.length); // TEST MESSAGE, REMOVE LATER!!!
 		flush(cipherBasketSendKey);
 		
