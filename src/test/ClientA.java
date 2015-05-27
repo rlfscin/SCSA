@@ -1,5 +1,10 @@
 package test;
 
+<<<<<<< HEAD
+=======
+import java.security.CryptoPrimitive;
+
+>>>>>>> origin/master
 import tool.AsymmetricCrypto;
 import tool.Basket;
 import tool.Parser;
