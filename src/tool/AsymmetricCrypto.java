@@ -21,13 +21,13 @@ public class AsymmetricCrypto {
 	}
 
 	public PublicKey getPublicKey(){		
-		return keypair.getPublic();
+		return this.keypair.getPublic();
 	}
 
 	private void asyGenKeys() throws Exception{
 		KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
 		kpg.initialize(1024);
-		keypair = kpg.generateKeyPair();
+		this.keypair = kpg.generateKeyPair();
 
 		cipher = Cipher.getInstance("RSA");
 	}

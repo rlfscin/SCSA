@@ -54,12 +54,13 @@ class SServerComunicator extends Thread{
 					
 					//test message
 					System.out.println("SERVER: GetPublicKey: sending key:  " + asymmetricCrypto.getPublicKey()); // TEST MESSAGE, REMOVE LATER!! 
+					System.out.println("SERVER: GetPublicKey: sending key:  " + asymmetricCrypto.getPublicKey().hashCode()); // TEST MESSAGE, REMOVE LATER!! 
 				}
 				continue;
 			} catch (Exception e){
 				System.out.println("SERVER: The basket is crypted"); // TEST MESSAGE, REMOVE LATER!! 
 			}
-			byte[] cipherBasket = sServerData.decrypt(input);
+			byte[] cipherBasket = asymmetricCrypto.decrypt(input);
 			// treat if not possible to convert to basket
 			Basket basket = (Basket) Parser.parseObject(cipherBasket);
 			if(basket.getHeader() == Header.SendPublicKey){
