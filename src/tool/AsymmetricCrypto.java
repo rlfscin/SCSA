@@ -76,11 +76,11 @@ public class AsymmetricCrypto {
 		if (publicKey != null){
 			// test line below, otherwise need to receive the PublicKey via parameter
 			//PublicKey publicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(keyBytes));
-			cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+			cipher.init(Cipher.DECRYPT_MODE, publicKey);
 		}else{
 			cipher.init(Cipher.DECRYPT_MODE, keypair.getPrivate());
 		}				
-		byte[] plainBytes = blockCipher(cipherBytes,Cipher.DECRYPT_MODE);
+		byte[] plainBytes = blockCipher(cipherBytes, Cipher.DECRYPT_MODE);
 		return plainBytes;
 	}
 
