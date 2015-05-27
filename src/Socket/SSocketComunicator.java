@@ -1,8 +1,8 @@
 package Socket;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.Serializable;
 import java.net.Socket;
 
@@ -13,16 +13,16 @@ import tool.SymmetricCrypto;
 
 public class SSocketComunicator {
 	private Socket socket;
-	private InputStream inputStream;
-	private OutputStream outputStream;
+	private DataInputStream inputStream;
+	private DataOutputStream outputStream;
 	private SymmetricCrypto symCrypto;
 	private Peer peer;
 
 	public SSocketComunicator(SymmetricCrypto symCrypto, Socket socket, Peer peer){
 		this.socket = socket;
 		try {
-			this.inputStream = this.socket.getInputStream();
-			this.outputStream = this.socket.getOutputStream();
+			this.inputStream = new DataInputStream(this.socket.getInputStream());
+			this.outputStream = new DataOutputStream(this.socket.getOutputStream());
 			this.symCrypto = symCrypto;
 			this.peer = peer;
 		} catch (IOException e) {
@@ -128,15 +128,23 @@ public class SSocketComunicator {
 	//do NOT used directly! no cryptography implemented
 	private void flush(byte[] bytes) throws IOException{
 		//TODO send the size of the basket
+		outputStream.writeInt(bytes.length);
 		outputStream.write(bytes);
-		socket.shutdownOutput();	
+		//socket.shutdownOutput();	
 	}
 
 	//do NOT used directly! no cryptography implemented
-	private byte[] read() throws IOException{
+	private byte[] read() {
 		//TODO receive the size of the basket
-		byte[] bytes = new byte[2048];
-		inputStream.read(bytes);
+		byte[] bytes = null;
+		try {
+			int length = inputStream.readInt();
+			bytes = new byte[length];
+			inputStream.read(bytes, 0, length);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return bytes;
 	}
 

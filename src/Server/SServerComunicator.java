@@ -57,7 +57,7 @@ class SServerComunicator extends Thread{
 				}
 				continue;
 			} catch (Exception e){
-				//empty
+				System.out.println("SERVER: The basket is crypted"); // TEST MESSAGE, REMOVE LATER!! 
 			}
 			byte[] cipherBasket = sServerData.decrypt(input);
 			// treat if not possible to convert to basket
@@ -117,16 +117,19 @@ class SServerComunicator extends Thread{
 
 	private void flush(byte[] bytes) throws IOException{
 		//TODO send the size of the basket
+		outputStream.writeInt(bytes.length);
 		outputStream.write(bytes);
-		socket.shutdownOutput();	
+		//socket.shutdownOutput();	
 	}
 
 	//do NOT used directly! no cryptography implemented
 	private byte[] read() {
 		//TODO receive the size of the basket
-		byte[] bytes = new byte[2048];
+		byte[] bytes = null;
 		try {
-			inputStream.read(bytes);
+			int length = inputStream.readInt();
+			bytes = new byte[length];
+			inputStream.read(bytes, 0, length);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

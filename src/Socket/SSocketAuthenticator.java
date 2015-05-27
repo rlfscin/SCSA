@@ -70,16 +70,23 @@ public class SSocketAuthenticator {
 	}
 	private void flush(byte[] bytes) throws IOException{
 		//TODO send the size of the basket
+		outputStream.writeInt(bytes.length);
 		outputStream.write(bytes);
 		//socket.shutdownOutput();	
 	}
 
 	//do NOT used directly! no cryptography implemented
-	private byte[] read() throws IOException{
+	private byte[] read() {
 		//TODO receive the size of the basket
-		byte[] bytes = new byte[2048];		
-		inputStream.read(bytes);
-		System.out.println("read."); // TEST MESSAGE, REMOVE LATER!!!
+		byte[] bytes = null;
+		try {
+			int length = inputStream.readInt();
+			bytes = new byte[length];
+			inputStream.read(bytes, 0, length);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return bytes;
 	}
 	
