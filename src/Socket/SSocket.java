@@ -15,15 +15,15 @@ import tool.SymmetricCrypto;
 public class SSocket {
 	private Socket socket;
 	private ArrayList<Peer> peers; // array of the class that will store a single peer = (address + session Key)
-	
+
 	private AsymmetricCrypto asyCrypto;
-	
+
 	//Server
 	private String serverAddress;
 	private int serverPort;
 	private PublicKey serverPublicKey;
-	
-	
+
+
 	//Client
 	private boolean connected;
 	private String clientAddress;
@@ -38,7 +38,7 @@ public class SSocket {
 			socket = null;
 			this.serverAddress = serverAddress;
 			this.serverPort = serverPort;
-			
+
 			this.clientAddress = null;
 			this.sscoketComunicator = null;
 
@@ -48,7 +48,7 @@ public class SSocket {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private PublicKey logon() throws Exception{
 		System.out.println("CLIENT: logging on."); // TEST MESSAGE, REMOVE LATER!!!
 		Socket socket = new Socket(serverAddress, serverPort);
@@ -56,23 +56,32 @@ public class SSocket {
 		SSocketAuthenticator ssAuthenticator = new SSocketAuthenticator(asyCrypto, socket);
 		PublicKey serverkey = ssAuthenticator.authenticate();
 		System.out.println("CLIENT: got server's key: " + serverkey); // TEST MESSAGE, REMOVE LATER!!!
-		socket.close();
+		closeConnection();
 		return serverkey;
 	}
 
-	public void connect(String ip, int port) throws UnknownHostException, IOException{
-		Socket socket = new Socket(ip, port);
-		sscoketComunicator = new SSocketComunicator(null, socket, null);
+	public void connect(String ip, int port) throws Exception{
+		Peer peer = usePeer(ip);
+
+		//okay but commented out for testing
+		//Socket socket = new Socket(peer.getAddress(), port);
+		//sscoketComunicator = new SSocketComunicator(symCrypto, socket, peer);
 	}
-	
+
+	public void closeConnection() throws IOException{
+		socket.close();		
+	}
+
+
 	public void sendFile(String filename, String address) throws Exception{
 		//TODO fix
-		Peer peer = use(address);
+		/*
 
 		SSocketComunicator sscommunicator = new SSocketComunicator(symCrypto, socket, peer);
 		//sscommunicator.sendFile(filename);
+		 */		 
 	}
-	
+
 	public void send(Serializable obj) throws Exception{
 		//TODO error connection
 		sscoketComunicator.sendObject(obj);
@@ -81,13 +90,13 @@ public class SSocket {
 	public void receiveFile(){
 		// TODO: IMPLEMENT!
 	}
-	
+
 	public Serializable receive() throws IOException, Exception{
 		//TODO error connection
 		return sscoketComunicator.receiveObject();
 	}
-	
-	
+
+
 	/*
 	 * 
 	 * Danger zone
@@ -99,35 +108,32 @@ public class SSocket {
 		SSocketComunicator sscommunicator = new SSocketComunicator(symCrypto, socket, peer);
 		sscommunicator.sendText(message);
 	}	
-	
-	*/
+
+	 */
 	public void receiveText(){
 		//TODO:  IMPLEMENT!
 	}
-	
-	public void sendObject(Serializable object, String address) throws Exception{
-		Peer peer = use(address);
 
+	public void sendObject(Serializable object, String address) throws Exception{
+		/*
 		SSocketComunicator sscommunicator = new SSocketComunicator(symCrypto, socket, peer);
 		sscommunicator.sendObject(object);
+		 */
 	}	
-	
-	
 
-	
-
-	private Peer use(String address) throws Exception{
+	private Peer usePeer(String targetAddress) throws Exception{
 		int index = -1;
-		index = indexOfPeer(address);
-		if (index == -1){
+		index = indexOfPeer(targetAddress);
+		if (index == -1){			
 			SSocketAuthenticator sSocketAuthenticator = new SSocketAuthenticator(asyCrypto, socket);
-			SecretKey sessionKey = sSocketAuthenticator.requestSession(address); 
-			addPeer(address, sessionKey);
+			SecretKey sessionKey = sSocketAuthenticator.requestSession(targetAddress, serverPublicKey); 
+			addPeer(targetAddress, sessionKey);
 		}
-		index = indexOfPeer(address);
+		index = indexOfPeer(targetAddress);
 
 		validatePeer(peers.get(index));
 
+		socket=null;
 		return peers.get(index);
 	}
 

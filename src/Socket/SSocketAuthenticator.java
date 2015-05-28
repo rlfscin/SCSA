@@ -67,12 +67,21 @@ public class SSocketAuthenticator {
 		//authenticated.
 	}
 	
-	public SecretKey requestSession(String address) throws UnknownHostException, IOException{
+	public SecretKey requestSession(String address, PublicKey serverPublicKey) throws Exception{
+		// !! VINI: working here for getting session key
 		
-		socket.close();
+		// send basket with the request
+		Basket keyRequestBasket = new Basket(Header.GetTicket, Parser.parseByte(address));
+		byte[] requestCipherBasket = asyCrypto.encrypt(Parser.parseByte(keyRequestBasket), serverPublicKey);
+		flush(requestCipherBasket);
 		
+		byte[] resposeCipherBasket = read();
+		Basket responseBasket = (Basket)Parser.parseObject(asyCrypto.decrypt(resposeCipherBasket));
+		SecretKey ticket = (SecretKey)Parser.parseObject(responseBasket.getData());
+		
+		socket.close();		
 		//return the key
-		return null;
+		return ticket;
 	}
 	private void flush(byte[] bytes) throws IOException{
 		//TODO send the size of the basket

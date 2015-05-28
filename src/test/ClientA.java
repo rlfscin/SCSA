@@ -1,11 +1,6 @@
 package test;
 
 
-import java.security.CryptoPrimitive;
-
-import tool.AsymmetricCrypto;
-import tool.Basket;
-import tool.Parser;
 import Socket.SSocket;
 
 
@@ -40,7 +35,9 @@ public class ClientA {
 		System.out.println(nome1);
 		
 		*/
-		SSocket socket = new SSocket("localhost", 5999);
+		SSocket socket = null;
+		if (args[1] == "") socket = new SSocket(args[0] = "localhost", 5999);
+		else socket = new SSocket(args[0], 5999);
 	}
 
 }
