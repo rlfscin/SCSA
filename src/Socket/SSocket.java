@@ -14,7 +14,7 @@ import tool.SymmetricCrypto;
 
 public class SSocket {
 	private Socket socket;
-	private ArrayList<Peer> peers; // array of the class that will store a single peer = (address + session Key)
+	private Peer peer; // class that will store a single peer = (address + session Key)
 
 	private AsymmetricCrypto asyCrypto;
 
@@ -63,7 +63,7 @@ public class SSocket {
 	public void connect(String ip, int port) throws Exception{
 		socket = new Socket(serverAddress, serverPort);
 		System.out.println("CLIENT: CONNECT: requesting connection to ip: " + ip); // TEST MESSAGE, REMOVE LATER!!!
-		Peer peer = usePeer(ip);
+		usePeer(ip);
 
 		//okay but commented out for testing
 		//Socket socket = new Socket(peer.getAddress(), port);
@@ -127,47 +127,11 @@ public class SSocket {
 		 */
 	}	
 
-	private Peer usePeer(String targetAddress) throws Exception{
-		int index = -1;
-		index = indexOfPeer(targetAddress);
-		if (index == -1){			
+	private void usePeer(String targetAddress) throws Exception{		
+		if (peer == null){			
 			SSocketAuthenticator sSocketAuthenticator = new SSocketAuthenticator(asyCrypto, socket);
-			Peer newPeer = sSocketAuthenticator.requestSession(targetAddress, serverPublicKey); 
-			addPeer(newPeer);
-			index = indexOfPeer(targetAddress);
+			peer = sSocketAuthenticator.requestSession(targetAddress, serverPublicKey); 						
 		} 		
-
-		socket=null;
-		return peers.get(index);
-	}
-
-	private void addPeer(String address, SecretKey sessionKey, byte[] ticket) throws Exception{
-		int index = -1;
-		if ((index = indexOfPeer(address)) >= 0)
-			peers.set(index, (new Peer(address, sessionKey, ticket)));
-		else peers.add(new Peer(address, sessionKey, ticket));
-	}
-	
-	private void addPeer(Peer peer) throws Exception{
-		int index = -1;
-		if ((index = indexOfPeer(peer.getAddress())) >= 0)
-			peers.set(index, peer);
-		else peers.add(peer);
-	}
-
-	private int indexOfPeer(String address){
-		if (peers != null)
-		for (Peer peer : peers) {
-			return peers.indexOf(peer);				
-		}
-		return -1;
-	}
-
-	private void removePeer(String address){
-		int index = -1;
-		if ((index = indexOfPeer(address)) >= 0)
-			return;
-
-		peers.remove(index);
+		socket=null;		
 	}
 }

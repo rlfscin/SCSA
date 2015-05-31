@@ -94,51 +94,32 @@ class SServerComunicator extends Thread {
 
 					// test message
 					System.out.println("SERVER: SendPublicKey: storing key: "
-							+ socket.getInetAddress().getHostAddress()); // TEST
-																			// MESSAGE,
-																			// REMOVE
-																			// LATER!!
+							+ socket.getInetAddress().getHostAddress()); // TEST MESSAGE, REMOVE LATER!!
 				}
 				continue;
 
 			} catch (Exception e) {
-				System.out.println(e.getMessage()); // TEST MESSAGE, REMOVE
-													// LATER!!
-				System.out
-						.println("SERVER: The basket couldn't be read [maybe needs one more decryption]."); // TEST
-																											// MESSAGE,
-																											// REMOVE
-																											// LATER!!
+				System.out.println(e.getMessage()); // TEST MESSAGE, REMOVE LATER!!
+				System.out.println("SERVER: The basket couldn't be read [maybe needs one more decryption]."); // TEST MESSAGE, REMOVE LATER!!
 			}
 			// Decrypt request
 			// decrypt FORMAT: Eps(Eka(I want talk to B))
 			PublicKey clientKey = sServerData.getKey(socket.getInetAddress()
 					.getHostAddress());
 
-			System.out.println("SERVER: decrypting in order: "
-					+ clientKey.hashCode() + " : "
-					+ asymmetricCrypto.getPublicKey().hashCode()); // TEST
-																	// MESSAGE,
-																	// REMOVE
-																	// LATER!!!
+			System.out.println("SERVER: decrypting in order: " + clientKey.hashCode() + " : "
+					+ asymmetricCrypto.getPublicKey().hashCode()); // TEST MESSAGE, REMOVE LATER!!!
 			
 			
 			byte[] cipherRequestBasket = asymmetricCrypto.decrypt(input);
 			
-			basket = (Basket) Parser.parseObject(asymmetricCrypto
-					.decrypt(cipherRequestBasket,
-							clientKey));
+			basket = (Basket) Parser.parseObject(asymmetricCrypto.decrypt(cipherRequestBasket, clientKey));
 
 			if (basket.getHeader() == Header.GetTicket) {
 				// Get request
 				// decrypt FORMAT: Eps(Eka(I want talk to B))
-				String targetAddress = (String) Parser.parseObject(basket
-						.getData());
-				System.out.println("SERVER: Got a ticket request to : "
-						+ (String) Parser.parseObject(basket.getData())); // TEST
-																			// MESSAGE,
-																			// REMOVE
-																			// LATER!!
+				String targetAddress = (String) Parser.parseObject(basket.getData());
+				System.out.println("SERVER: Got a ticket request to : "	+ (String) Parser.parseObject(basket.getData())); // TEST MESSAGE, REMOVE LATER!!
 
 				// create session key
 				SymmetricCrypto symmetricCrypto = new SymmetricCrypto();
@@ -150,11 +131,7 @@ class SServerComunicator extends Thread {
 				// (ABkey + Ticket)
 
 				byte[] ticket = generateTicket(targetAddress, sessionkey);
-				System.out.println("SERVER: ticket generated : "
-						+ ticket.hashCode()); // TEST
-																// MESSAGE,
-																// REMOVE
-																// LATER!!
+				System.out.println("SERVER: ticket generated : " + ticket.hashCode()); // TEST MESSAGE, REMOVE LATER!!
 
 				// send ticket - Response
 				ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -163,7 +140,7 @@ class SServerComunicator extends Thread {
 				byte[] ticketResponse = outputStream.toByteArray();
 				// response should be 48 bytes long ( 24 session + 24
 				// ticket)
-				System.out.println("SERVER: sessoin length: "
+				System.out.println("SERVER: session length: "
 						+ Parser.parseByte(sessionkey).length); // TEST
 																// MESSAGE,
 																// REMOVE
@@ -172,21 +149,14 @@ class SServerComunicator extends Thread {
 						+ Parser.parseByte(ticket).length); // TEST MESSAGE,
 															// REMOVE
 															// LATER!!
-				System.out.println("SERVER: response generated : "
-						+ (String) Parser.parseObject(ticketResponse)); // TEST
-																		// MESSAGE,
-																		// REMOVE
-																		// LATER!!
+				System.out.println("SERVER: response generated : "	+ ticketResponse.hashCode()); // TEST MESSAGE, REMOVE LATER!!
 
 				// then send the ticket back
 				// FORMAT: Eka(Eps(ABkey + Ticket))
-				Basket ticketBasket = new Basket(Header.SendTicket,
-						ticketResponse);
-				byte[] ticketBasketCipher = asymmetricCrypto
-						.encrypt(asymmetricCrypto.encrypt(Parser
-								.parseByte(ticketBasket)), sServerData
-								.getKey(socket.getInetAddress()
-										.getHostAddress()));
+				Basket ticketBasket = new Basket(Header.SendTicket,	ticketResponse);
+				byte[] ticketBasketCipher = asymmetricCrypto.encrypt
+						(asymmetricCrypto.encrypt(Parser.parseByte(ticketBasket))
+								, sServerData.getKey(socket.getInetAddress().getHostAddress()));
 				flush(ticketBasketCipher);
 
 				break;
