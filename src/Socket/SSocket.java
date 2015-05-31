@@ -68,7 +68,9 @@ public class SSocket {
 	
 	public void listen(int port) throws Exception{
 		ServerSocket server = new ServerSocket(port);
+		System.out.println("CLIENT: waiting connection..."); // TEST MESSAGE, REMOVE LATER!!!
 		socket = server.accept();
+		System.out.println("CLIENT: connection accepted."); // TEST MESSAGE, REMOVE LATER!!!
 		sscoketComunicator = new SSocketComunicator(asyCrypto, socket);
 		sscoketComunicator.readTicket();
 		System.out.println("CLIENT: Ticket ok."); // TEST MESSAGE, REMOVE LATER!!!
@@ -86,12 +88,13 @@ public class SSocket {
 		return serverkey;
 	}
 
-	public void connect(String ip, int port) throws Exception{
-		//socket = new Socket(serverAddress, serverPort);
-		System.out.println("CLIENT: CONNECT: requesting connection to ip: " + ip); // TEST MESSAGE, REMOVE LATER!!!
-		usePeer(ip);
+	public void connect(String targetIp, int port) throws Exception{
+		socket = new Socket(serverAddress, serverPort);
+		System.out.println("CLIENT: CONNECT: requesting connection to ip: " + targetIp + ":" + port); // TEST MESSAGE, REMOVE LATER!!!
+		usePeer(targetIp);
 
 		//okay but commented out for testing
+		System.out.println(peer.getAddress()+ ":" + port);
 		Socket socket = new Socket(peer.getAddress(), port);
 		sscoketComunicator = new SSocketComunicator(asyCrypto, socket);
 		sscoketComunicator.sendTicket(peer.ticket);

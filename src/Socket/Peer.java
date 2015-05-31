@@ -12,15 +12,15 @@ public class Peer {
 		this.ticket = ticket;
 	}
 	
-	private InetAddress address;
+	private String address;
 	public SecretKey sessionKey;
 	public byte[] ticket;
 	
 	public String getAddress() {
-		return address.toString();
+		return address;
 	}
 	public void setAddress(String address) throws Exception {
-		this.address = InetAddress.getByName(address);
+		this.address = address;
 	} 
 	
 }
