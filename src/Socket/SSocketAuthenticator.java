@@ -21,6 +21,9 @@ public class SSocketAuthenticator {
 	private DataOutputStream outputStream;
 	private AsymmetricCrypto asyCrypto;
 	
+	private int TICKETLENGTH = 256;
+	private int SESSIONLENGTH = 152;
+	
 	public SSocketAuthenticator(AsymmetricCrypto asyCrypto, Socket socket){
 		try {
 			this.socket = socket;
@@ -86,8 +89,8 @@ public class SSocketAuthenticator {
 		// Response
 		// decrypt FORMAT: Epa(Eks(ABkey + Ticket))
 		byte[] resposeCipherBasket = read();
-		byte[] responseCipherBasket2 = asyCrypto.decrypt(resposeCipherBasket, serverPublicKey);
-		Basket responseBasket = (Basket)Parser.parseObject(asyCrypto.decrypt(responseCipherBasket2));
+		byte[] responseCipherBasket2 = asyCrypto.decrypt(resposeCipherBasket);
+		Basket responseBasket = (Basket)Parser.parseObject(asyCrypto.decrypt(responseCipherBasket2, serverPublicKey));
 		
 		SecretKey sessionKey = null;		
 		byte[] ticket = null;
@@ -95,10 +98,11 @@ public class SSocketAuthenticator {
 		if (responseBasket.getHeader() == Header.SendTicket){
 			byte[] basketData = responseBasket.getData();
 			
-			sessionKey = (SecretKey)Parser.parseObject(Arrays.copyOfRange(basketData, 0, 23)); 
-			ticket = Arrays.copyOfRange(basketData, 24, 47);
+			sessionKey = (SecretKey)Parser.parseObject(Arrays.copyOfRange(basketData, 0, SESSIONLENGTH - 1)); 
+			ticket = Arrays.copyOfRange(basketData, SESSIONLENGTH, SESSIONLENGTH + TICKETLENGTH - 1 );
 			
-			System.out.println("CLIENT: got session key: " + sessionKey); // TEST MESSAGE, REMOVE LATER!!!
+			System.out.println("CLIENT: got session key: " + sessionKey.hashCode()); // TEST MESSAGE, REMOVE LATER!!!
+			System.out.println("CLIENT: got ticket: " + ticket.hashCode()); // TEST MESSAGE, REMOVE LATER!!!
 		}
 		
 		socket.close();		

@@ -140,20 +140,16 @@ class SServerComunicator extends Thread {
 				byte[] ticketResponse = outputStream.toByteArray();
 				// response should be 48 bytes long ( 24 session + 24
 				// ticket)
-				System.out.println("SERVER: session length: "
-						+ Parser.parseByte(sessionkey).length); // TEST
-																// MESSAGE,
-																// REMOVE
-																// LATER!!
-				System.out.println("SERVER: ticket length: "
-						+ Parser.parseByte(ticket).length); // TEST MESSAGE,
-															// REMOVE
-															// LATER!!
+				System.out.println("SERVER: session length: " + Parser.parseByte(sessionkey).length); // TEST MESSAGE, REMOVE LATER!!
+				System.out.println("SERVER: session HASH: " + sessionkey.hashCode()); // TEST MESSAGE, REMOVE LATER!!
+				System.out.println("SERVER: ticket length: " + ticket.length); // TEST MESSAGE, REMOVE LATER!!
+				System.out.println("SERVER: ticket HASH: " + ticket.hashCode()); // TEST MESSAGE, REMOVE LATER!!
 				System.out.println("SERVER: response generated : "	+ ticketResponse.hashCode()); // TEST MESSAGE, REMOVE LATER!!
 
 				// then send the ticket back
 				// FORMAT: Eka(Eps(ABkey + Ticket))
 				Basket ticketBasket = new Basket(Header.SendTicket,	ticketResponse);
+				System.out.println("SERVER: ticket response length: " +  ticketResponse.length);
 				byte[] ticketBasketCipher = asymmetricCrypto.encrypt
 						(asymmetricCrypto.encrypt(Parser.parseByte(ticketBasket))
 								, sServerData.getKey(socket.getInetAddress().getHostAddress()));
