@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.net.Socket;
 
+import javax.crypto.SecretKey;
+
+import tool.AsymmetricCrypto;
 import tool.Basket;
 import tool.Header;
 import tool.Parser;
@@ -16,15 +19,15 @@ public class SSocketComunicator {
 	private DataInputStream inputStream;
 	private DataOutputStream outputStream;
 	private SymmetricCrypto symCrypto;
-	private Peer peer;
+	private AsymmetricCrypto asyCrypto;
 
-	public SSocketComunicator(SymmetricCrypto symCrypto, Socket socket, Peer peer){
+	public SSocketComunicator(AsymmetricCrypto asyCrypto, Socket socket){
 		this.socket = socket;
 		try {
 			this.inputStream = new DataInputStream(this.socket.getInputStream());
 			this.outputStream = new DataOutputStream(this.socket.getOutputStream());
-			this.symCrypto = symCrypto;
-			this.peer = peer;
+			this.asyCrypto = asyCrypto;
+			this.symCrypto = null;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -37,7 +40,7 @@ public class SSocketComunicator {
 		byte[] data = Parser.parseByte(plainObject);
 		Basket basket = new Basket(Header.SendData, data);
 
-		byte[] cipherBytes = symCrypto.encrypt(Parser.parseByte(basket), peer.sessionKey);
+		byte[] cipherBytes = symCrypto.encrypt(Parser.parseByte(basket));
 
 		flush(cipherBytes);
 	}
@@ -45,10 +48,27 @@ public class SSocketComunicator {
 	public Serializable receiveObject() throws IOException, Exception{
 		
 		//TODO check fragments
-		byte[] plainBasketBytes = symCrypto.decrypt(read(), peer.sessionKey);
-		Basket basket = (Basket)Parser.parseObject(plainBasketBytes);
+		byte[] plainBasketBytes = symCrypto.decrypt(read());
+		Basket basket = (Basket) Parser.parseObject(plainBasketBytes);
 
 		return Parser.parseObject(basket.getData());
+	}
+	
+	
+	public void readTicket() throws Exception{
+		byte[] ticketCipher = read();
+		//peer = new Peer(address, sessionKey, ticket)
+		Basket basket = (Basket) Parser.parseObject(ticketCipher);
+		if(basket.getHeader() == Header.SendTicket){
+			SecretKey sectionKey = (SecretKey) Parser.parseObject(asyCrypto.decrypt(basket.getData()));
+			symCrypto = new SymmetricCrypto(sectionKey);
+		}
+		
+	}
+	
+	public void sendTicket(byte[] ticket) throws IOException {
+		Basket basket = new Basket(Header.SendTicket, ticket);
+		flush(Parser.parseByte(basket));
 	}
 	/*
 	 *We need to talk how we gonna send the files.
@@ -134,17 +154,12 @@ public class SSocketComunicator {
 	}
 
 	//do NOT used directly! no cryptography implemented
-	private byte[] read() {
-		//TODO receive the size of the basket
+	private byte[] read() throws IOException {
+		// TODO receive the size of the basket
 		byte[] bytes = null;
-		try {
-			int length = inputStream.readInt();
-			bytes = new byte[length];
-			inputStream.read(bytes, 0, length);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		int length = inputStream.readInt();
+		bytes = new byte[length];
+		inputStream.read(bytes, 0, length);
 		return bytes;
 	}
 

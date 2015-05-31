@@ -25,6 +25,7 @@ public class ClientB {
 			System.out.println("Type your target: " + System.lineSeparator());
 			BufferedReader reader= new BufferedReader(new InputStreamReader(System.in));
 			socket.connect(reader.readLine(), 5998);
+			socket.sendString("Rubens Lopes de Farias Silva");
 			//socket.disconnect();
 		} catch (Exception e) {
 			System.out.println(e.getMessage());

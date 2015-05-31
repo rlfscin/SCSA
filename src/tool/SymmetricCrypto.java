@@ -9,11 +9,13 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class SymmetricCrypto {
 
-	public SymmetricCrypto(){
-
+	private SecretKey sectionKey;
+	
+	public SymmetricCrypto(SecretKey sectionKey){
+		this.sectionKey = sectionKey;
 	}
 
-	public SecretKey generateKey(){		
+	public static SecretKey generateKey(){		
 		byte[] keyBytes = new byte[24];
 		new Random().nextBytes(keyBytes);
 		SecretKey key = new SecretKeySpec(keyBytes, "DESede");
@@ -53,23 +55,23 @@ public class SymmetricCrypto {
 
 	}
 	 */
-	public byte[] encrypt(byte[] plainBytes, SecretKey key) throws Exception {
+	public byte[] encrypt(byte[] plainBytes) throws Exception {
 		//final SecretKey key = new SecretKeySpec(keyBytes, "DESede");
 
 		final IvParameterSpec iv = new IvParameterSpec(new byte[8]);
 		final Cipher cipher = Cipher.getInstance("DESede/CBC/PKCS5Padding");
-		cipher.init(Cipher.ENCRYPT_MODE, key, iv);
+		cipher.init(Cipher.ENCRYPT_MODE, sectionKey, iv);
 
 		final byte[] cipherBytes = cipher.doFinal(plainBytes);
 		return cipherBytes;
 	}
 
-	public byte[] decrypt(byte[] cipherBytes, SecretKey key) throws Exception {
+	public byte[] decrypt(byte[] cipherBytes) throws Exception {
 		//final SecretKey key = new SecretKeySpec(keyBytes, "DESede");
 
 		final IvParameterSpec iv = new IvParameterSpec(new byte[8]);
 		final Cipher decipher = Cipher.getInstance("DESede/CBC/PKCS5Padding");
-		decipher.init(Cipher.DECRYPT_MODE, key, iv);
+		decipher.init(Cipher.DECRYPT_MODE, sectionKey, iv);
 
 		final byte[] plainBytes = decipher.doFinal(cipherBytes);
 		return plainBytes;

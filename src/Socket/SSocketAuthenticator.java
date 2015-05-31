@@ -118,17 +118,12 @@ public class SSocketAuthenticator {
 	}
 
 	//do NOT used directly! no cryptography implemented
-	private byte[] read() {
-		//TODO receive the size of the basket
+	private byte[] read() throws IOException {
+		// TODO receive the size of the basket
 		byte[] bytes = null;
-		try {
-			int length = inputStream.readInt();
-			bytes = new byte[length];
-			inputStream.read(bytes, 0, length);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		int length = inputStream.readInt();
+		bytes = new byte[length];
+		inputStream.read(bytes, 0, length);
 		return bytes;
 	}
 	

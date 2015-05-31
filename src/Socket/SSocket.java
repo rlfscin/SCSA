@@ -2,6 +2,7 @@ package Socket;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.security.PublicKey;
 
@@ -24,13 +25,11 @@ public class SSocket {
 	private boolean connected;
 	private String clientAddress;
 	private int clientPort;
-	private SymmetricCrypto symCrypto;
 	private SSocketComunicator sscoketComunicator;
 
 	private SSocket(String serverAddress, int serverPort) {
 		try {
 			asyCrypto = new AsymmetricCrypto();
-			symCrypto = new SymmetricCrypto();
 			socket = null;
 			this.serverAddress = serverAddress;
 			this.serverPort = serverPort;
@@ -66,6 +65,15 @@ public class SSocket {
 		}
 		
 	}
+	
+	public void listen(int port) throws Exception{
+		ServerSocket server = new ServerSocket(port);
+		socket = server.accept();
+		sscoketComunicator = new SSocketComunicator(asyCrypto, socket);
+		sscoketComunicator.readTicket();
+		System.out.println("CLIENT: Ticket ok."); // TEST MESSAGE, REMOVE LATER!!!
+		
+	}
 
 	private PublicKey logon() throws Exception{
 		System.out.println("CLIENT: logging on."); // TEST MESSAGE, REMOVE LATER!!!
@@ -79,13 +87,14 @@ public class SSocket {
 	}
 
 	public void connect(String ip, int port) throws Exception{
-		socket = new Socket(serverAddress, serverPort);
+		//socket = new Socket(serverAddress, serverPort);
 		System.out.println("CLIENT: CONNECT: requesting connection to ip: " + ip); // TEST MESSAGE, REMOVE LATER!!!
 		usePeer(ip);
 
 		//okay but commented out for testing
-		//Socket socket = new Socket(peer.getAddress(), port);
-		//sscoketComunicator = new SSocketComunicator(symCrypto, socket, peer);
+		Socket socket = new Socket(peer.getAddress(), port);
+		sscoketComunicator = new SSocketComunicator(asyCrypto, socket);
+		sscoketComunicator.sendTicket(peer.ticket);
 	}
 
 	public void disconnect() {
@@ -119,6 +128,17 @@ public class SSocket {
 		//TODO error connection
 		return sscoketComunicator.receiveObject();
 	}
+	
+	public String readString() throws IOException, Exception{
+		return (String) receive();
+	}
+	
+	
+	
+	
+	public void sendString(String data) throws Exception{
+		send(data);
+	}
 
 
 	/*
@@ -150,6 +170,6 @@ public class SSocket {
 			SSocketAuthenticator sSocketAuthenticator = new SSocketAuthenticator(asyCrypto, socket);
 			peer = sSocketAuthenticator.requestSession(targetAddress, serverPublicKey); 						
 		} 		
-		socket=null;		
+		socket.close();		
 	}
 }

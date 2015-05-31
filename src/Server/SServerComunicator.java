@@ -122,8 +122,7 @@ class SServerComunicator extends Thread {
 				System.out.println("SERVER: Got a ticket request to : "	+ (String) Parser.parseObject(basket.getData())); // TEST MESSAGE, REMOVE LATER!!
 
 				// create session key
-				SymmetricCrypto symmetricCrypto = new SymmetricCrypto();
-				SecretKey sessionkey = symmetricCrypto.generateKey();
+				SecretKey sessionkey = SymmetricCrypto.generateKey();
 				System.out.println("SERVER: session key generated : "
 						+ sessionkey); // TEST MESSAGE, REMOVE LATER!!
 
