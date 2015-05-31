@@ -61,6 +61,7 @@ public class SSocket {
 	}
 
 	public void connect(String ip, int port) throws Exception{
+		System.out.println("CLIENT: CONNECT: connecting to ip: " + ip); // TEST MESSAGE, REMOVE LATER!!!
 		Peer peer = usePeer(ip);
 
 		//okay but commented out for testing
@@ -68,8 +69,12 @@ public class SSocket {
 		//sscoketComunicator = new SSocketComunicator(symCrypto, socket, peer);
 	}
 
-	public void disconnect() throws IOException{
-		socket.close();		
+	public void disconnect() {
+		try {
+			socket.close();					
+		} catch (Exception e) {
+			// ignore
+		}
 	}
 
 

@@ -6,7 +6,7 @@ import Socket.SSocket;
 
 public class ClientA {
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 		/*
 		 String address = "";
 
@@ -35,9 +35,14 @@ public class ClientA {
 		System.out.println(nome1);
 		
 		*/
-		SSocket socket = null;
-		if (args[1] == "") socket = new SSocket(args[0] = "localhost", 5999);
-		else socket = new SSocket(args[0], 5999);
+		try {
+			SSocket socket = null;
+			if (args[0] == "") socket = new SSocket(args[0] = "localhost", 5999);
+			else socket = new SSocket(args[0], 5999);	
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
 	}
 
 }
