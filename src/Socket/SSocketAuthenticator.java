@@ -20,8 +20,6 @@ public class SSocketAuthenticator {
 	private DataInputStream inputStream;
 	private DataOutputStream outputStream;
 	private AsymmetricCrypto asyCrypto;
-	//private String serverAddress;
-	//private int port;
 	
 	public SSocketAuthenticator(AsymmetricCrypto asyCrypto, Socket socket){
 		try {
@@ -56,11 +54,13 @@ public class SSocketAuthenticator {
 		System.out.println("CLIENT: this is my request size: " + Parser.parseByte(basketSendKey).length); // TEST MESSAGE, REMOVE LATER!!!
 		byte[] cipherBasketSendKey = asyCrypto.encrypt(Parser.parseByte(basketSendKey), serverPublicKey);
 		System.out.println("CLIENT: this is the server pub. key: " + serverPublicKey); // TEST MESSAGE, REMOVE LATER!!!
+		System.out.println("CLIENT: this is the server pub. key HASH: " + serverPublicKey.hashCode()); // TEST MESSAGE, REMOVE LATER!!!
 		System.out.println("CLIENT: this is my ENCRYPTED request size: " + cipherBasketSendKey.length); // TEST MESSAGE, REMOVE LATER!!!
 		flush(cipherBasketSendKey);
 		
 		// test message 
 		System.out.println("CLIENT: my public key was sent!: " + Parser.parseByte(asyCrypto.getPublicKey())); // TEST MESSAGE, REMOVE LATER!!!
+		System.out.println("CLIENT: my public key was sent! HASH: " + Parser.parseByte(asyCrypto.getPublicKey().hashCode())); // TEST MESSAGE, REMOVE LATER!!!
 		
 		//returning the key I got
 		return serverPublicKey;
@@ -74,8 +74,12 @@ public class SSocketAuthenticator {
 		// FORMAT: Eks(Epa(I want talk to B))
 		Basket getTicketBasket = new Basket(Header.GetTicket, Parser.parseByte(address));
 		byte[] getTicketCipher = asyCrypto.encrypt(Parser.parseByte(getTicketBasket)); // Integrity
-		byte[] getTicketCipher2 = asyCrypto.encrypt(Parser.parseByte(getTicketCipher), serverPublicKey); // Confidentiality
+		byte[] getTicketCipher2 = asyCrypto.encrypt(getTicketCipher, serverPublicKey); // Confidentiality
+		
 		System.out.println("CLIENT: requesting session key with " + address); // TEST MESSAGE, REMOVE LATER!!!
+		System.out.println("CLIENT: encrypted in order: " + asyCrypto.getPublicKey().hashCode() + " : " + 
+		serverPublicKey.hashCode()); // TEST MESSAGE, REMOVE LATER!!!
+				
 		flush(getTicketCipher2);
 		System.out.println("CLIENT: requested."); // TEST MESSAGE, REMOVE LATER!!!
 		

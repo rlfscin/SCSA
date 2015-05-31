@@ -44,6 +44,7 @@ class SServerComunicator extends Thread{
 			e.printStackTrace();
 		}
 	}
+	
 	private void communicate() throws Exception{
 		boolean wasRead;
 		while(true){
@@ -65,12 +66,13 @@ class SServerComunicator extends Thread{
 			}			
 			
 			// Couldn't be processed as plain, so try to decrypt with my private
-			byte[] basketBytes = asymmetricCrypto.decrypt(input);
+			//byte[] basketCipherBytes = asymmetricCrypto.decrypt(input);
 			
 			Basket basket;
 			try {
 				// try to convert to basket
-				basket = (Basket) Parser.parseObject(basketBytes);
+				//basket = (Basket) Parser.parseObject(asymmetricCrypto.decrypt(basketCipherBytes));
+				basket = (Basket) Parser.parseObject(asymmetricCrypto.decrypt(input));
 				
 				
 				if(basket.getHeader() == Header.SendPublicKey){
@@ -83,12 +85,21 @@ class SServerComunicator extends Thread{
 					continue;
 				}
 			} catch (Exception e) {
+				System.out.println(e.getMessage()); // TEST MESSAGE, REMOVE LATER!! 
 				System.out.println("SERVER: The basket couldn't be read [maybe needs one more decryption]."); // TEST MESSAGE, REMOVE LATER!! 
 			}
 			
 			if (!wasRead){
-				PublicKey clientKey = sServerData.getKey(socket.getInetAddress().getHostAddress());
-				basket = (Basket)Parser.parseObject(asymmetricCrypto.decrypt(basketBytes, clientKey));				
+				// Decrypt request
+				// decrypt FORMAT: Eps(Eka(I want talk to B))
+				PublicKey clientKey = sServerData.getKey(socket.getInetAddress().getHostAddress());				
+
+				System.out.println("SERVER: decrypting in order: " + clientKey.hashCode() + " : " + 
+						asymmetricCrypto.getPublicKey().hashCode()); // TEST MESSAGE, REMOVE LATER!!!
+				
+				byte[] cipherRequestBasket = asymmetricCrypto.decrypt(input, clientKey);
+				basket = (Basket)Parser.parseObject(asymmetricCrypto.decrypt(cipherRequestBasket));
+				
 				if(basket.getHeader() == Header.GetTicket){
 					// Get request
 					// decrypt FORMAT: Eps(Eka(I want talk to B))					
@@ -129,7 +140,7 @@ class SServerComunicator extends Thread{
 			}
 			
 		}
-		socket.close();
+		if (socket != null) socket.close();
 	}
 
 	private void sendKey() throws IOException{

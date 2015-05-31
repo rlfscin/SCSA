@@ -61,7 +61,8 @@ public class SSocket {
 	}
 
 	public void connect(String ip, int port) throws Exception{
-		System.out.println("CLIENT: CONNECT: connecting to ip: " + ip); // TEST MESSAGE, REMOVE LATER!!!
+		socket = new Socket(serverAddress, serverPort);
+		System.out.println("CLIENT: CONNECT: requesting connection to ip: " + ip); // TEST MESSAGE, REMOVE LATER!!!
 		Peer peer = usePeer(ip);
 
 		//okay but commented out for testing
@@ -71,7 +72,7 @@ public class SSocket {
 
 	public void disconnect() {
 		try {
-			socket.close();					
+			if (socket != null) socket.close();					
 		} catch (Exception e) {
 			// ignore
 		}
@@ -155,6 +156,7 @@ public class SSocket {
 	}
 
 	private int indexOfPeer(String address){
+		if (peers != null)
 		for (Peer peer : peers) {
 			return peers.indexOf(peer);				
 		}

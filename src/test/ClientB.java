@@ -1,6 +1,9 @@
 package test;
 
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
 import Socket.SSocket;
 
 
@@ -17,10 +20,12 @@ public class ClientB {
 			// request a ip to connect to host
 			
 			// connect to the other host
-			socket.connect(args[0], 5998);
+			System.out.println("Type your target: " + System.lineSeparator());
+			BufferedReader reader= new BufferedReader(new InputStreamReader(System.in));
+			socket.connect(reader.readLine(), 5998);
 			//socket.disconnect();
 		} catch (Exception e) {
-			// TODO: handle exception
+			System.out.println(e.getMessage());
 		}
 		
 	}
