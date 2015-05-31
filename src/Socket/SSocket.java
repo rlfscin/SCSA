@@ -56,7 +56,7 @@ public class SSocket {
 		SSocketAuthenticator ssAuthenticator = new SSocketAuthenticator(asyCrypto, socket);
 		PublicKey serverkey = ssAuthenticator.authenticate();
 		System.out.println("CLIENT: got server's key: " + serverkey); // TEST MESSAGE, REMOVE LATER!!!
-		closeConnection();
+		disconnect();
 		return serverkey;
 	}
 
@@ -68,7 +68,7 @@ public class SSocket {
 		//sscoketComunicator = new SSocketComunicator(symCrypto, socket, peer);
 	}
 
-	public void closeConnection() throws IOException{
+	public void disconnect() throws IOException{
 		socket.close();		
 	}
 
@@ -126,22 +126,27 @@ public class SSocket {
 		index = indexOfPeer(targetAddress);
 		if (index == -1){			
 			SSocketAuthenticator sSocketAuthenticator = new SSocketAuthenticator(asyCrypto, socket);
-			SecretKey sessionKey = sSocketAuthenticator.requestSession(targetAddress, serverPublicKey); 
-			addPeer(targetAddress, sessionKey);
-		}
-		index = indexOfPeer(targetAddress);
-
-		validatePeer(peers.get(index));
+			Peer newPeer = sSocketAuthenticator.requestSession(targetAddress, serverPublicKey); 
+			addPeer(newPeer);
+			index = indexOfPeer(targetAddress);
+		} 		
 
 		socket=null;
 		return peers.get(index);
 	}
 
-	private void addPeer(String address, SecretKey sessionKey) throws Exception{
+	private void addPeer(String address, SecretKey sessionKey, byte[] ticket) throws Exception{
 		int index = -1;
 		if ((index = indexOfPeer(address)) >= 0)
-			peers.set(index, (new Peer(address, sessionKey)));
-		else peers.add(new Peer(address, sessionKey));
+			peers.set(index, (new Peer(address, sessionKey, ticket)));
+		else peers.add(new Peer(address, sessionKey, ticket));
+	}
+	
+	private void addPeer(Peer peer) throws Exception{
+		int index = -1;
+		if ((index = indexOfPeer(peer.getAddress())) >= 0)
+			peers.set(index, peer);
+		else peers.add(peer);
 	}
 
 	private int indexOfPeer(String address){
@@ -157,11 +162,5 @@ public class SSocket {
 			return;
 
 		peers.remove(index);
-	}
-
-	private boolean validatePeer(Peer peer){
-		// CODE
-		// used to validate if peer gotten from server is up.
-		return false;
 	}
 }

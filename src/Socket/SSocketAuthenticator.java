@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.security.PublicKey;
+import java.util.Arrays;
 
 import javax.crypto.SecretKey;
 
@@ -67,22 +68,41 @@ public class SSocketAuthenticator {
 		//authenticated.
 	}
 	
-	public SecretKey requestSession(String address, PublicKey serverPublicKey) throws Exception{
+	public Peer requestSession(String address, PublicKey serverPublicKey) throws Exception{
 		// !! VINI: working here for getting session key
 		
 		// send basket with the request
-		Basket keyRequestBasket = new Basket(Header.GetTicket, Parser.parseByte(address));
-		byte[] requestCipherBasket = asyCrypto.encrypt(Parser.parseByte(keyRequestBasket), serverPublicKey);
-		flush(requestCipherBasket);
+		// FORMAT: Eks(Epa(I want talk to B))
+		Basket getTicketBasket = new Basket(Header.GetTicket, Parser.parseByte(address));
+		byte[] getTicketCipher = asyCrypto.encrypt(Parser.parseByte(getTicketBasket)); // Integrity
+		byte[] getTicketCipher2 = asyCrypto.encrypt(Parser.parseByte(getTicketCipher), serverPublicKey); // Confidentiality
+		System.out.println("CLIENT: requesting session key with " + address); // TEST MESSAGE, REMOVE LATER!!!
+		flush(getTicketCipher2);
+		System.out.println("CLIENT: requested."); // TEST MESSAGE, REMOVE LATER!!!
 		
+		// Response
+		// decrypt FORMAT: Epa(Eks(ABkey + Ticket))
 		byte[] resposeCipherBasket = read();
-		Basket responseBasket = (Basket)Parser.parseObject(asyCrypto.decrypt(resposeCipherBasket));
-		SecretKey ticket = (SecretKey)Parser.parseObject(responseBasket.getData());
+		byte[] responseCipherBasket2 = asyCrypto.decrypt(resposeCipherBasket, serverPublicKey);
+		Basket responseBasket = (Basket)Parser.parseObject(asyCrypto.decrypt(responseCipherBasket2));
+		
+		SecretKey sessionKey = null;		
+		byte[] ticket = null;
+		
+		if (responseBasket.getHeader() == Header.SendTicket){
+			byte[] basketData = responseBasket.getData();
+			
+			sessionKey = (SecretKey)Parser.parseObject(Arrays.copyOfRange(basketData, 0, 23)); 
+			ticket = Arrays.copyOfRange(basketData, 24, 47);
+			
+			System.out.println("CLIENT: got session key: " + sessionKey); // TEST MESSAGE, REMOVE LATER!!!
+		}
 		
 		socket.close();		
 		//return the key
-		return ticket;
+		return (new Peer(address, sessionKey, ticket));
 	}
+	
 	private void flush(byte[] bytes) throws IOException{
 		//TODO send the size of the basket
 		outputStream.writeInt(bytes.length);

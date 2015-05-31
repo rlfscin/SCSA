@@ -6,13 +6,15 @@ import javax.crypto.SecretKey;
 
 public class Peer {
 	
-	public Peer(String address, SecretKey sessionKey) throws Exception{
+	public Peer(String address, SecretKey sessionKey, byte[] ticket) throws Exception{
 		this.sessionKey = sessionKey;
 		setAddress(address);
+		this.ticket = ticket;
 	}
 	
 	private InetAddress address;
 	public SecretKey sessionKey;
+	public byte[] ticket;
 	
 	public String getAddress() {
 		return address.toString();

@@ -2,8 +2,7 @@ package tool;
 
 public enum Header {
 	GetPublicKey, 
-	SendPublicKey,
-	ReceiveKey, 
+	SendPublicKey, 
 	GetTicket, 
 	SendTicket,
 	SendData,
