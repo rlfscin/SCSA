@@ -15,9 +15,9 @@ public class ClientB {
 		try {
 			SSocket socket = null;
 			if (args.length == 0){
-				socket = new SSocket("localhost", 5999);
+				socket = SSocket.getNewSSocket("localhost", 5999);
 			}
-			else socket = new SSocket(args[0], 5999);
+			else socket = SSocket.getNewSSocket(args[0], 5999);
 			
 			// request a ip to connect to host
 			

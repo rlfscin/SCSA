@@ -3,11 +3,7 @@ package Socket;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.security.PublicKey;
-import java.util.ArrayList;
-
-import javax.crypto.SecretKey;
 
 import tool.AsymmetricCrypto;
 import tool.SymmetricCrypto;
@@ -16,12 +12,12 @@ public class SSocket {
 	private Socket socket;
 	private Peer peer; // class that will store a single peer = (address + session Key)
 
-	private AsymmetricCrypto asyCrypto;
+	private static AsymmetricCrypto asyCrypto;
 
 	//Server
-	private String serverAddress;
-	private int serverPort;
-	private PublicKey serverPublicKey;
+	private static String serverAddress;
+	private static int serverPort;
+	private static PublicKey serverPublicKey;
 
 
 	//Client
@@ -31,7 +27,7 @@ public class SSocket {
 	private SymmetricCrypto symCrypto;
 	private SSocketComunicator sscoketComunicator;
 
-	public SSocket(String serverAddress, int serverPort) {
+	private SSocket(String serverAddress, int serverPort) {
 		try {
 			asyCrypto = new AsymmetricCrypto();
 			symCrypto = new SymmetricCrypto();
@@ -47,6 +43,28 @@ public class SSocket {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	private SSocket() {
+		try {
+			socket = null;
+			this.clientAddress = null;
+			this.sscoketComunicator = null;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public static SSocket getNewSSocket(String serverAddress, int serverPort){
+		if(serverPublicKey != null){
+			return new SSocket();
+		}
+		else{
+			return new SSocket(serverAddress, serverPort);
+		}
+		
 	}
 
 	private PublicKey logon() throws Exception{

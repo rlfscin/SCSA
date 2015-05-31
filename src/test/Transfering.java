@@ -16,7 +16,7 @@ public class Transfering {
 	public void setUp(){
 		String args[] = new String[0];
 		//server = new SServer(args);
-		client1 = new SSocket("localhost", 5999);
+		client1 = SSocket.getNewSSocket("localhost", 5999);
 	}
 
 

@@ -37,8 +37,8 @@ public class ClientA {
 		*/
 		try {
 			SSocket socket = null;
-			if (args[0] == "") socket = new SSocket(args[0] = "localhost", 5999);
-			else socket = new SSocket(args[0], 5999);	
+			if (args[0] == "") socket = SSocket.getNewSSocket(args[0] = "localhost", 5999);
+			else socket = SSocket.getNewSSocket(args[0], 5999);
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
