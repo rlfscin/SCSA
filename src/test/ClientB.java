@@ -26,6 +26,7 @@ public class ClientB {
 			BufferedReader reader= new BufferedReader(new InputStreamReader(System.in));
 			//socket.connect(reader.readLine(), 5998);
 			socket.connect("10.0.1.5" , 5998);
+			System.out.println("Client: connected with host.");
 			socket.sendString("Rubens Lopes de Farias Silva");
 			//socket.disconnect();
 		} catch (Exception e) {

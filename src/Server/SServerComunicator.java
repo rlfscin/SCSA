@@ -64,15 +64,8 @@ class SServerComunicator extends Thread {
 					sendKey();
 
 					// test message
-					System.out.println("SERVER: GetPublicKey: sending key:  "
-							+ asymmetricCrypto.getPublicKey()); // TEST MESSAGE,
-																// REMOVE
-																// LATER!!
-					System.out
-							.println("SERVER: GetPublicKey: sending key HASH:  "
-									+ asymmetricCrypto.getPublicKey()
-											.hashCode()); // TEST MESSAGE,
-															// REMOVE LATER!!
+					//System.out.println("SERVER: GetPublicKey: sending key:  "	+ asymmetricCrypto.getPublicKey()); // TEST MESSAGE, REMOVE LATER!!
+					//System.out.println("SERVER: GetPublicKey: sending key HASH:  "	+ asymmetricCrypto.getPublicKey().hashCode()); // TEST MESSAGE, REMOVE LATER!!
 				}
 				continue;
 			} catch (Exception e) {
@@ -93,8 +86,7 @@ class SServerComunicator extends Thread {
 									clientKey);
 
 					// test message
-					System.out.println("SERVER: SendPublicKey: storing key: "
-							+ socket.getInetAddress().getHostAddress()); // TEST MESSAGE, REMOVE LATER!!
+					//System.out.println("SERVER: SendPublicKey: storing key: " + socket.getInetAddress().getHostAddress()); // TEST MESSAGE, REMOVE LATER!!
 				}
 				continue;
 
@@ -123,8 +115,7 @@ class SServerComunicator extends Thread {
 
 				// create session key
 				SecretKey sessionkey = SymmetricCrypto.generateKey();
-				System.out.println("SERVER: session key generated : "
-						+ sessionkey); // TEST MESSAGE, REMOVE LATER!!
+				System.out.println("SERVER: session key generated : " + sessionkey); // TEST MESSAGE, REMOVE LATER!!
 
 				// generate ticket
 				// (ABkey + Ticket)

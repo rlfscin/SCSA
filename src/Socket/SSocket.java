@@ -66,17 +66,6 @@ public class SSocket {
 		
 	}
 	
-	public void listen(int port) throws Exception{
-		ServerSocket server = new ServerSocket(port);
-		System.out.println("CLIENT: waiting connection..."); // TEST MESSAGE, REMOVE LATER!!!
-		socket = server.accept();
-		System.out.println("CLIENT: connection accepted."); // TEST MESSAGE, REMOVE LATER!!!
-		sscoketComunicator = new SSocketComunicator(asyCrypto, socket);
-		sscoketComunicator.readTicket();
-		System.out.println("CLIENT: Ticket ok."); // TEST MESSAGE, REMOVE LATER!!!
-		
-	}
-
 	private PublicKey logon() throws Exception{
 		System.out.println("CLIENT: logging on."); // TEST MESSAGE, REMOVE LATER!!!
 		Socket socket = new Socket(serverAddress, serverPort);
@@ -86,6 +75,17 @@ public class SSocket {
 		System.out.println("CLIENT: got server's key: " + serverkey); // TEST MESSAGE, REMOVE LATER!!!
 		disconnect();
 		return serverkey;
+	}
+	
+	public void listen(int port) throws Exception{
+		ServerSocket server = new ServerSocket(port);
+		System.out.println("CLIENT: waiting connection..."); // TEST MESSAGE, REMOVE LATER!!!
+		socket = server.accept();
+		System.out.println("CLIENT: connection accepted."); // TEST MESSAGE, REMOVE LATER!!!
+		sscoketComunicator = new SSocketComunicator(asyCrypto, socket);
+		System.out.println("CLIENT: communicator created."); // TEST MESSAGE, REMOVE LATER!!!
+		sscoketComunicator.readTicket();
+		System.out.println("CLIENT: Ticket ok."); // TEST MESSAGE, REMOVE LATER!!!		
 	}
 
 	public void connect(String targetIp, int port) throws Exception{
@@ -97,7 +97,7 @@ public class SSocket {
 		System.out.println(peer.getAddress()+ ":" + port);
 		Socket socket = new Socket(peer.getAddress(), port);
 		sscoketComunicator = new SSocketComunicator(asyCrypto, socket);
-		sscoketComunicator.sendTicket(peer.ticket);
+		sscoketComunicator.sendTicket(peer);
 	}
 
 	public void disconnect() {
@@ -120,6 +120,7 @@ public class SSocket {
 
 	public void send(Serializable obj) throws Exception{
 		//TODO error connection
+		System.out.println("Sending object");
 		sscoketComunicator.sendObject(obj);
 	}
 
@@ -129,6 +130,7 @@ public class SSocket {
 
 	public Serializable receive() throws IOException, Exception{
 		//TODO error connection
+		System.out.println("Receiving object");
 		return sscoketComunicator.receiveObject();
 	}
 	

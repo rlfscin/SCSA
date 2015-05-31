@@ -39,16 +39,20 @@ public class SSocketComunicator {
 		//TODO check fragments
 		byte[] data = Parser.parseByte(plainObject);
 		Basket basket = new Basket(Header.SendData, data);
-
+		
 		byte[] cipherBytes = symCrypto.encrypt(Parser.parseByte(basket));
-
+		
 		flush(cipherBytes);
+		System.out.println("Reach here");
 	}
 
 	public Serializable receiveObject() throws IOException, Exception{
 		
 		//TODO check fragments
-		byte[] plainBasketBytes = symCrypto.decrypt(read());
+		byte[] in = read();
+		System.out.println("read");
+		byte[] plainBasketBytes = symCrypto.decrypt(in);
+		System.out.println("but not here");
 		Basket basket = (Basket) Parser.parseObject(plainBasketBytes);
 
 		return Parser.parseObject(basket.getData());
@@ -57,19 +61,35 @@ public class SSocketComunicator {
 	
 	public void readTicket() throws Exception{
 		byte[] ticketCipher = read();
+		
+		System.out.println("CLIENT: ticket read :"); // TEST MESSAGE, REMOVE LATER
+		
 		//peer = new Peer(address, sessionKey, ticket)
 		Basket basket = (Basket) Parser.parseObject(ticketCipher);
 		if(basket.getHeader() == Header.SendTicket){
-			SecretKey sectionKey = (SecretKey) Parser.parseObject(asyCrypto.decrypt(basket.getData()));
-			symCrypto = new SymmetricCrypto(sectionKey);
+			SecretKey sessionKey = (SecretKey) Parser.parseObject(asyCrypto.decrypt(basket.getData())); // ERRO ENCONTRADO
+			
+			
+			System.out.println("CLIENT: ticket HASH : " + basket.getData().hashCode()); // TEST MESSAGE, REMOVE LATER
+			System.out.println("CLIENT: session key HASH : " + sessionKey.hashCode()); // TEST MESSAGE, REMOVE LATER
 		}
 		
 	}
 	
-	public void sendTicket(byte[] ticket) throws IOException {
-		Basket basket = new Basket(Header.SendTicket, ticket);
+	public void sendTicket(Peer peer) throws IOException {
+		Basket basket = new Basket(Header.SendTicket, peer.ticket);
+		
+		System.out.println("CLIENT: sending ticket HASH : " + peer.ticket.hashCode()); // TEST MESSAGE, REMOVE LATER
+		
 		flush(Parser.parseByte(basket));
+		
+		System.out.println("CLIENT: sending ticket HASH : " + basket.getData().hashCode()); // TEST MESSAGE, REMOVE LATER
+		
+		symCrypto = new SymmetricCrypto(peer.sessionKey);
+		System.out.println("CLIENT: session key stored when sending ticket -HASH : " + peer.sessionKey.hashCode()); // TEST MESSAGE, REMOVE LATER
 	}
+	
+	
 	/*
 	 *We need to talk how we gonna send the files.
 	//need to test
@@ -147,7 +167,6 @@ public class SSocketComunicator {
 
 	//do NOT used directly! no cryptography implemented
 	private void flush(byte[] bytes) throws IOException{
-		//TODO send the size of the basket
 		outputStream.writeInt(bytes.length);
 		outputStream.write(bytes);
 		//socket.shutdownOutput();	

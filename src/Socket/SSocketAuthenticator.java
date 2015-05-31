@@ -44,7 +44,7 @@ public class SSocketAuthenticator {
 		Basket basketRequest = new Basket(Header.GetPublicKey, null);
 		flush(Parser.parseByte(basketRequest));
 		
-		System.out.println("CLIENT: requesting public key"); // TEST MESSAGE, REMOVE LATER!!!
+		//System.out.println("CLIENT: requesting public key"); // TEST MESSAGE, REMOVE LATER!!!
 		
 		// reading response
 		Basket basketResponse = (Basket) Parser.parseObject(read());		
@@ -56,16 +56,16 @@ public class SSocketAuthenticator {
 		//sending my key!
 		Basket basketSendKey = new Basket(Header.SendPublicKey, Parser.parseByte(asyCrypto.getPublicKey()));
 		
-		System.out.println("CLIENT: this is my request size: " + Parser.parseByte(basketSendKey).length); // TEST MESSAGE, REMOVE LATER!!!
+		//System.out.println("CLIENT: this is my request size: " + Parser.parseByte(basketSendKey).length); // TEST MESSAGE, REMOVE LATER!!!
 		byte[] cipherBasketSendKey = asyCrypto.encrypt(Parser.parseByte(basketSendKey), serverPublicKey);
-		System.out.println("CLIENT: this is the server pub. key: " + serverPublicKey); // TEST MESSAGE, REMOVE LATER!!!
-		System.out.println("CLIENT: this is the server pub. key HASH: " + serverPublicKey.hashCode()); // TEST MESSAGE, REMOVE LATER!!!
-		System.out.println("CLIENT: this is my ENCRYPTED request size: " + cipherBasketSendKey.length); // TEST MESSAGE, REMOVE LATER!!!
+		//System.out.println("CLIENT: this is the server pub. key: " + serverPublicKey); // TEST MESSAGE, REMOVE LATER!!!
+		//System.out.println("CLIENT: this is the server pub. key HASH: " + serverPublicKey.hashCode()); // TEST MESSAGE, REMOVE LATER!!!
+		//System.out.println("CLIENT: this is my ENCRYPTED request size: " + cipherBasketSendKey.length); // TEST MESSAGE, REMOVE LATER!!!
 		flush(cipherBasketSendKey);
 		
 		// test message 
-		System.out.println("CLIENT: my public key was sent!: " + Parser.parseByte(asyCrypto.getPublicKey())); // TEST MESSAGE, REMOVE LATER!!!
-		System.out.println("CLIENT: my public key was sent! HASH: " + Parser.parseByte(asyCrypto.getPublicKey().hashCode())); // TEST MESSAGE, REMOVE LATER!!!
+		//System.out.println("CLIENT: my public key was sent!: " + Parser.parseByte(asyCrypto.getPublicKey())); // TEST MESSAGE, REMOVE LATER!!!
+		//System.out.println("CLIENT: my public key was sent! HASH: " + Parser.parseByte(asyCrypto.getPublicKey().hashCode())); // TEST MESSAGE, REMOVE LATER!!!
 		
 		//returning the key I got
 		return serverPublicKey;
@@ -73,8 +73,6 @@ public class SSocketAuthenticator {
 	}
 	
 	public Peer requestSession(String address, PublicKey serverPublicKey) throws Exception{
-		// !! VINI: working here for getting session key
-		
 		// send basket with the request
 		// FORMAT: Eks(Epa(I want talk to B))
 		Basket getTicketBasket = new Basket(Header.GetTicket, Parser.parseByte(address));
@@ -99,10 +97,13 @@ public class SSocketAuthenticator {
 			byte[] basketData = responseBasket.getData();
 			
 			sessionKey = (SecretKey)Parser.parseObject(Arrays.copyOfRange(basketData, 0, SESSIONLENGTH)); 
+			
 			ticket = Arrays.copyOfRange(basketData, SESSIONLENGTH, SESSIONLENGTH + TICKETLENGTH);
+			System.out.println("CLIENT: got ticket: " + ticket.hashCode()); // TEST MESSAGE, REMOVE LATER!!!
+			ticket = Arrays.copyOfRange(basketData, SESSIONLENGTH, basketData.length);			
+			System.out.println("CLIENT: got ticket: " + ticket.hashCode()); // TEST MESSAGE, REMOVE LATER!!!
 			
 			System.out.println("CLIENT: got session key: " + sessionKey.hashCode()); // TEST MESSAGE, REMOVE LATER!!!
-			System.out.println("CLIENT: got ticket: " + ticket.hashCode()); // TEST MESSAGE, REMOVE LATER!!!
 		}
 		
 		socket.close();		
