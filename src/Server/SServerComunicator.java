@@ -151,7 +151,7 @@ class SServerComunicator extends Thread {
 
 				byte[] ticket = generateTicket(targetAddress, sessionkey);
 				System.out.println("SERVER: ticket generated : "
-						+ (String) Parser.parseObject(ticket)); // TEST
+						+ ticket.hashCode()); // TEST
 																// MESSAGE,
 																// REMOVE
 																// LATER!!
