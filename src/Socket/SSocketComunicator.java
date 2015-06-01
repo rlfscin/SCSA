@@ -43,6 +43,7 @@ public class SSocketComunicator {
 		byte[] cipherBytes = symCrypto.encrypt(Parser.parseByte(basket));
 		
 		flush(cipherBytes);
+		System.out.println("sent : " + cipherBytes.hashCode()); // TEST MESSAGE
 		System.out.println("Reach here");
 	}
 
@@ -50,7 +51,7 @@ public class SSocketComunicator {
 		
 		//TODO check fragments
 		byte[] in = read();
-		System.out.println("read");
+		System.out.println("read : " + in.hashCode()); // TEST MESSAGE
 		byte[] plainBasketBytes = symCrypto.decrypt(in);
 		System.out.println("but not here");
 		Basket basket = (Basket) Parser.parseObject(plainBasketBytes);

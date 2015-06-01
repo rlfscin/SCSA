@@ -98,6 +98,7 @@ public class SSocketAuthenticator {
 			
 			sessionKey = (SecretKey)Parser.parseObject(Arrays.copyOfRange(basketData, 0, SESSIONLENGTH)); 
 			
+			
 			ticket = Arrays.copyOfRange(basketData, SESSIONLENGTH, SESSIONLENGTH + TICKETLENGTH);
 			System.out.println("CLIENT: got ticket: " + ticket.hashCode()); // TEST MESSAGE, REMOVE LATER!!!
 			ticket = Arrays.copyOfRange(basketData, SESSIONLENGTH, basketData.length);			

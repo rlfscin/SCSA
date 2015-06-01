@@ -42,7 +42,8 @@ public class ClientA {
 			socket.listen(5998);
 			System.out.println(socket.readString());
 		} catch (Exception e) {
-			// TODO: handle exception
+			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 		
 	}
