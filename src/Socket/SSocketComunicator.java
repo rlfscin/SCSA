@@ -42,6 +42,9 @@ public class SSocketComunicator {
 		
 		byte[] cipherBytes = symCrypto.encrypt(Parser.parseByte(basket));
 		
+		Basket plainBasketTEST = (Basket)Parser.parseObject(symCrypto.decrypt(cipherBytes)); // TEST
+		System.out.println("Plain TExt:" + Parser.parseObject(plainBasketTEST.getData()).toString());
+		
 		flush(cipherBytes);
 		System.out.println("sent : " + cipherBytes.hashCode()); // TEST MESSAGE
 		System.out.println("Reach here");
