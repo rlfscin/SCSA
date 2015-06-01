@@ -70,7 +70,7 @@ public class SSocketComunicator {
 		if(basket.getHeader() == Header.SendTicket){
 			SecretKey sessionKey = (SecretKey) Parser.parseObject(asyCrypto.decrypt(basket.getData())); // ERRO ENCONTRADO
 			
-			
+			symCrypto = new SymmetricCrypto(sessionKey);
 			System.out.println("CLIENT: ticket HASH : " + basket.getData().hashCode()); // TEST MESSAGE, REMOVE LATER
 			System.out.println("CLIENT: session key HASH : " + sessionKey.hashCode()); // TEST MESSAGE, REMOVE LATER
 		}
@@ -168,6 +168,7 @@ public class SSocketComunicator {
 
 	//do NOT used directly! no cryptography implemented
 	private void flush(byte[] bytes) throws IOException{
+		//TODO send the size of the basket
 		outputStream.writeInt(bytes.length);
 		outputStream.write(bytes);
 		//socket.shutdownOutput();	
