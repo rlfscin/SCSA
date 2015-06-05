@@ -22,7 +22,6 @@ public class SSocketAuthenticator {
 	private SecretKey sessionKey;		
 	private byte[] ticket;
 
-	//private int TICKETLENGTH = 256;
 	private int SESSIONLENGTH = 152;
 	
 	public SSocketAuthenticator(AsymmetricCrypto asyCrypto, Socket socket){

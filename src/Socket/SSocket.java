@@ -24,8 +24,8 @@ public class SSocket {
 		try {
 			asyCrypto = new AsymmetricCrypto();
 			socket = null;
-			this.serverAddress = serverAddress;
-			this.serverPort = serverPort;
+			SSocket.serverAddress = serverAddress;
+			SSocket.serverPort = serverPort;
 
 			this.sscoketComunicator = null;
 
@@ -68,6 +68,7 @@ public class SSocket {
 	}
 
 	public void listen(int port) throws Exception{
+		@SuppressWarnings("resource")
 		ServerSocket server = new ServerSocket(port);
 		System.out.println("INFO: waiting connection...");
 		socket = server.accept();
