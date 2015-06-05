@@ -4,7 +4,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.security.PublicKey;
 import java.util.Arrays;
 
@@ -23,7 +22,6 @@ public class SSocketAuthenticator {
 	private SecretKey sessionKey;		
 	private byte[] ticket;
 
-	private int TICKETLENGTH = 256;
 	private int SESSIONLENGTH = 152;
 	
 	public SSocketAuthenticator(AsymmetricCrypto asyCrypto, Socket socket){
