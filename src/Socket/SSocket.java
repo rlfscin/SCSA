@@ -122,13 +122,14 @@ public class SSocket {
 		sendObject(b);
 		
 	}
-	public void receiveFile() throws IOException, Exception{
+	public File receiveFile() throws IOException, Exception{
 		String fileName = readString();
 		File file = new File(fileName);
 		FileOutputStream fos = new FileOutputStream(file);
 		byte[] b = (byte[]) readObject();
 		fos.write(b);
 		fos.close();
+		return file;
 	}
 
 	public void send(Serializable obj) throws Exception{

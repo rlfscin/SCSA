@@ -31,6 +31,10 @@ public class ClientB {
 			System.out.println("Client: connected with host.");
 			
 			socket.sendString("Rubens Lopes de Farias Silva");
+			socket.sendInt(2015);
+			socket.receiveFile();
+			socket.sendString("ok");
+			
 			//socket.disconnect();
 			
 		} catch (Exception e) {
