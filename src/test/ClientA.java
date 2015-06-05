@@ -41,6 +41,10 @@ public class ClientA {
 			else socket = SSocket.getNewSSocket(args[0], 5999);
 			socket.listen(5998);
 			System.out.println(socket.readString());
+			System.out.println(socket.readInt());
+			socket.sendString("Sending file");
+			socket.sendFile("Rubens SCSA.txt");
+			System.out.println(socket.readString());
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
