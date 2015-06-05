@@ -13,20 +13,11 @@ import tool.AsymmetricCrypto;
 
 public class SSocket {
 	private Socket socket;
-	private Peer peer; // class that will store a single peer = (address + session Key)
-
+	private Peer peer;
 	private static AsymmetricCrypto asyCrypto;
-
-	//Server
 	private static String serverAddress;
 	private static int serverPort;
 	private static PublicKey serverPublicKey;
-
-
-	//Client
-	private boolean connected;
-	private String clientAddress;
-	private int clientPort;
 	private SSocketComunicator sscoketComunicator;
 
 	private SSocket(String serverAddress, int serverPort) {
@@ -36,7 +27,6 @@ public class SSocket {
 			this.serverAddress = serverAddress;
 			this.serverPort = serverPort;
 
-			this.clientAddress = null;
 			this.sscoketComunicator = null;
 
 			serverPublicKey = logon();
@@ -45,19 +35,18 @@ public class SSocket {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private SSocket() {
 		try {
 			socket = null;
-			this.clientAddress = null;
 			this.sscoketComunicator = null;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
-	
+
+
 	public static SSocket getNewSSocket(String serverAddress, int serverPort){
 		if(serverPublicKey != null){
 			return new SSocket();
@@ -65,29 +54,26 @@ public class SSocket {
 		else{
 			return new SSocket(serverAddress, serverPort);
 		}
-		
+
 	}
-	
-	private PublicKey logon() throws Exception{
-		System.out.println("CLIENT: logging on."); // TEST MESSAGE, REMOVE LATER!!!
+
+	private PublicKey logon() throws Exception{		
 		Socket socket = new Socket(serverAddress, serverPort);
 		// socket opened inside the authenticator
 		SSocketAuthenticator ssAuthenticator = new SSocketAuthenticator(asyCrypto, socket);
 		PublicKey serverkey = ssAuthenticator.authenticate();
-		System.out.println("CLIENT: got server's key: " + serverkey); // TEST MESSAGE, REMOVE LATER!!!
+		System.out.println("INFO: Authenticated to " + serverAddress +":"+serverPort); // TEST MESSAGE, REMOVE LATER!!!
 		disconnect();
 		return serverkey;
 	}
-	
+
 	public void listen(int port) throws Exception{
 		ServerSocket server = new ServerSocket(port);
-		System.out.println("CLIENT: waiting connection..."); // TEST MESSAGE, REMOVE LATER!!!
+		System.out.println("CLIENT: waiting connection...");
 		socket = server.accept();
-		System.out.println("CLIENT: connection accepted."); // TEST MESSAGE, REMOVE LATER!!!
-		sscoketComunicator = new SSocketComunicator(asyCrypto, socket);
-		System.out.println("CLIENT: communicator created."); // TEST MESSAGE, REMOVE LATER!!!
-		sscoketComunicator.readTicket();
-		System.out.println("CLIENT: Ticket ok."); // TEST MESSAGE, REMOVE LATER!!!		
+		System.out.println("CLIENT: connection accepted from: " + server.getInetAddress().getHostAddress());
+		sscoketComunicator = new SSocketComunicator(asyCrypto, socket);		
+		sscoketComunicator.readTicket();		
 	}
 
 	public void connect(String targetIp, int port) throws Exception{
@@ -120,7 +106,7 @@ public class SSocket {
 		byte[] b = new byte[(int) sizeFile];
 		fis.read(b, 0, b.length);
 		sendObject(b);
-		
+
 	}
 	public File receiveFile() throws IOException, Exception{
 		String fileName = readString();
@@ -133,41 +119,39 @@ public class SSocket {
 	}
 
 	public void send(Serializable obj) throws Exception{
-		//TODO error connection
 		System.out.println("Sending object");
 		sscoketComunicator.sendObject(obj);
 	}
 
-	
+
 	public Serializable receive() throws IOException, Exception{
-		//TODO error connection
 		System.out.println("Receiving object");
 		return sscoketComunicator.receiveObject();
 	}
-	
+
 	public String readString() throws IOException, Exception{
 		return (String) receive();
 	}
-	
+
 	public int readInt() throws IOException, Exception{
 		return (int) receive();
 	}
-	
+
 	public long readlong() throws IOException, Exception{
 		return (long) receive();
 	}
-	
+
 	public double readDouble() throws IOException, Exception{
 		return (double) receive();
 	}
-	
+
 	public Serializable readObject() throws IOException, Exception{
 		return receive();
 	}
-	
-	
-	
-	
+
+
+
+
 	public void sendString(String data) throws Exception{
 		send(data);
 	}
@@ -179,11 +163,11 @@ public class SSocket {
 	public void sendLong(long data) throws Exception{
 		send(data);
 	}
-	
+
 	public void sendDouble(double data) throws Exception{
 		send(data);
 	}
-	
+
 	public void sendObject(Serializable data) throws Exception{
 		send(data);
 	}

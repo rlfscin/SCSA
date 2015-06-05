@@ -8,13 +8,13 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 public class Parser {
-	
+
 	public static Serializable parseObject(byte[] data) throws IOException, ClassNotFoundException{
 		ByteArrayInputStream in = new ByteArrayInputStream(data);
 		ObjectInputStream is = new ObjectInputStream(in);
 		return (Serializable) is.readObject();
 	}
-	
+
 	public static byte[] parseByte(Serializable obj) throws IOException{
 		if(obj == null) return null;
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -22,8 +22,4 @@ public class Parser {
 		os.writeObject(obj);
 		return out.toByteArray();
 	}
-	
-	
-	//final SecretKey key = new SecretKeySpec(keyBytes, "DESede");
-	
 }

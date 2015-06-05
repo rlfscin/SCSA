@@ -3,9 +3,6 @@ package tool;
 import java.io.Serializable;
 
 public class Basket implements Serializable {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1186247562604839067L;
 	
 	private Header header;

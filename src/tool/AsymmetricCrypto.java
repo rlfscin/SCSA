@@ -1,11 +1,9 @@
 package tool;
 
 
-import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.PublicKey;
-import java.security.spec.X509EncodedKeySpec;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -32,23 +30,6 @@ public class AsymmetricCrypto {
 		cipher = Cipher.getInstance("RSA");
 	}
 
-	/*
-	public byte[] encText(String plainText, byte[] keyBytes) throws Exception {
-		byte[] cipherBytes = null;
-		byte[] plainBytes = plainText.getBytes();
-		cipherBytes = encrypt(plainBytes);
-		return cipherBytes;
-	}
-
-	public String decText(byte[] cipherBytes, byte[] keyBytes)throws Exception{
-		String plainText = "";
-		byte[] plainBytes;
-		plainBytes = decrypt(cipherBytes);
-		plainText = new String(plainBytes, "UTF-8");
-		return plainText;
-	}
-	 */
-
 	public byte[] encrypt(byte[] plainBytes) throws Exception{
 		return encrypt(plainBytes, null);
 	}
@@ -56,8 +37,6 @@ public class AsymmetricCrypto {
 	// MUST RECEIVE A PUBLIC KEY, AND ALSO ENCRYPT USING THEIR OWN PRIVATE
 	public byte[] encrypt(byte[] plainBytes, PublicKey publicKey) throws Exception{		
 		if (publicKey != null){
-			// test line below, otherwise need to receive the PublicKey via parameter
-			//PublicKey publicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(keyBytes));
 			cipher.init(Cipher.ENCRYPT_MODE, publicKey);
 		}else{
 			cipher.init(Cipher.ENCRYPT_MODE, keypair.getPrivate());
@@ -73,9 +52,7 @@ public class AsymmetricCrypto {
 	}
 
 	public byte[] decrypt(byte[] cipherBytes, PublicKey publicKey) throws Exception{
-		if (publicKey != null){
-			// test line below, otherwise need to receive the PublicKey via parameter
-			//PublicKey publicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(keyBytes));
+		if (publicKey != null){			
 			cipher.init(Cipher.DECRYPT_MODE, publicKey);
 		}else{
 			cipher.init(Cipher.DECRYPT_MODE, keypair.getPrivate());

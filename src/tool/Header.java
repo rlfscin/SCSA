@@ -6,5 +6,4 @@ public enum Header {
 	GetTicket, 
 	SendTicket,
 	SendData,
-	SendDataFrag,
 }
