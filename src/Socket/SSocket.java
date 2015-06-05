@@ -1,5 +1,8 @@
 package Socket;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.ServerSocket;
@@ -7,7 +10,6 @@ import java.net.Socket;
 import java.security.PublicKey;
 
 import tool.AsymmetricCrypto;
-import tool.SymmetricCrypto;
 
 public class SSocket {
 	private Socket socket;
@@ -109,13 +111,24 @@ public class SSocket {
 	}
 
 
-	public void sendFile(String filename, String address) throws Exception{
-		//TODO fix
-		/*
-
-		SSocketComunicator sscommunicator = new SSocketComunicator(symCrypto, socket, peer);
-		//sscommunicator.sendFile(filename);
-		 */		 
+	public void sendFile(String filename) throws Exception{
+		File file = new File(filename);
+		long sizeFile = file.length();
+		sendString(filename);
+		@SuppressWarnings("resource")
+		FileInputStream fis = new FileInputStream(file);
+		byte[] b = new byte[(int) sizeFile];
+		fis.read(b, 0, b.length);
+		sendObject(b);
+		
+	}
+	public void receiveFile() throws IOException, Exception{
+		String fileName = readString();
+		File file = new File(fileName);
+		FileOutputStream fos = new FileOutputStream(file);
+		byte[] b = (byte[]) readObject();
+		fos.write(b);
+		fos.close();
 	}
 
 	public void send(Serializable obj) throws Exception{
@@ -124,10 +137,7 @@ public class SSocket {
 		sscoketComunicator.sendObject(obj);
 	}
 
-	public void receiveFile(){
-		// TODO: IMPLEMENT!
-	}
-
+	
 	public Serializable receive() throws IOException, Exception{
 		//TODO error connection
 		System.out.println("Receiving object");
@@ -138,6 +148,22 @@ public class SSocket {
 		return (String) receive();
 	}
 	
+	public int readInt() throws IOException, Exception{
+		return (int) receive();
+	}
+	
+	public long readlong() throws IOException, Exception{
+		return (long) receive();
+	}
+	
+	public double readDouble() throws IOException, Exception{
+		return (double) receive();
+	}
+	
+	public Serializable readObject() throws IOException, Exception{
+		return receive();
+	}
+	
 	
 	
 	
@@ -145,30 +171,22 @@ public class SSocket {
 		send(data);
 	}
 
-
-	/*
-	 * 
-	 * Danger zone
-	 */
-	/*
-	public void sendText(String message, String address) throws Exception{
-		Peer peer = use(address);
-
-		SSocketComunicator sscommunicator = new SSocketComunicator(symCrypto, socket, peer);
-		sscommunicator.sendText(message);
-	}	
-
-	 */
-	public void receiveText(){
-		//TODO:  IMPLEMENT!
+	public void sendInt(int data) throws Exception{
+		send(data);
 	}
 
-	public void sendObject(Serializable object, String address) throws Exception{
-		/*
-		SSocketComunicator sscommunicator = new SSocketComunicator(symCrypto, socket, peer);
-		sscommunicator.sendObject(object);
-		 */
-	}	
+	public void sendLong(long data) throws Exception{
+		send(data);
+	}
+	
+	public void sendDouble(double data) throws Exception{
+		send(data);
+	}
+	
+	public void sendObject(Serializable data) throws Exception{
+		send(data);
+	}
+
 
 	private void usePeer(String targetAddress) throws Exception{		
 		if (peer == null){			
