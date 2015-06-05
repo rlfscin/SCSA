@@ -6,9 +6,6 @@ import java.io.InputStreamReader;
 
 import Socket.SSocket;
 
-
-
-
 public class ClientB {
 
 	public static void main(String[] args) {
@@ -32,6 +29,7 @@ public class ClientB {
 			
 			socket.sendString("Rubens Lopes de Farias Silva");
 			socket.sendInt(2015);
+			System.out.println(socket.readString());
 			socket.receiveFile();
 			socket.sendString("ok");
 			

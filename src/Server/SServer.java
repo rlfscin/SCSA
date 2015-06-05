@@ -12,7 +12,7 @@ public class SServer extends Thread{
 	private AsymmetricCrypto asymmetricCrypto;
 	
 	public SServer(int port, boolean thread) throws Exception {
-		//generate my pair of keys
+		// generate my pair of keys
 		asymmetricCrypto = new AsymmetricCrypto();		
 		
 		boolean isThread = thread;
@@ -32,9 +32,6 @@ public class SServer extends Thread{
 			serverSocket = new ServerSocket(port);
 			while(true){
 				Socket socket = serverSocket.accept();				
-				
-				System.out.println("SERVER: connected."); // TEST MESSAGE, REMOVE LATER!!!
-				
 				(new SServerComunicator(socket, sServerData, asymmetricCrypto)).start();
 			}
 		} catch (Exception e) {

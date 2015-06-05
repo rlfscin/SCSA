@@ -1,7 +1,5 @@
 package Server;
 
-import tool.SymmetricCrypto;
-
 public class AuthenticationServer {
 
 	public static void main(String[] args) {
