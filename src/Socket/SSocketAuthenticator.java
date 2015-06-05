@@ -4,7 +4,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.security.PublicKey;
 import java.util.Arrays;
 
@@ -23,7 +22,7 @@ public class SSocketAuthenticator {
 	private SecretKey sessionKey;		
 	private byte[] ticket;
 
-	private int TICKETLENGTH = 256;
+	//private int TICKETLENGTH = 256;
 	private int SESSIONLENGTH = 152;
 	
 	public SSocketAuthenticator(AsymmetricCrypto asyCrypto, Socket socket){
@@ -34,7 +33,6 @@ public class SSocketAuthenticator {
 			this.asyCrypto = asyCrypto;
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -49,7 +47,7 @@ public class SSocketAuthenticator {
 		PublicKey serverPublicKey = (PublicKey) Parser.parseObject(basketResponse.getData());
 		
 		if (basketResponse.getHeader() == Header.SendPublicKey) 
-			System.out.println("Server's up. Authenticating." + System.lineSeparator()); // consider revising here later
+			System.out.println("Server's up. Authenticating." + System.lineSeparator());
 		
 		//sending my key!
 		Basket basketSendKey = new Basket(Header.SendPublicKey, Parser.parseByte(asyCrypto.getPublicKey()));
@@ -65,10 +63,10 @@ public class SSocketAuthenticator {
 	public Peer requestSession(String address, PublicKey serverPublicKey) throws Exception{
 		// send basket with the request
 		Basket getTicketBasket = new Basket(Header.GetTicket, Parser.parseByte(address));
-		byte[] getTicketCipher = asyCrypto.encrypt(Parser.parseByte(getTicketBasket)); // Integrity
-		byte[] getTicketCipher2 = asyCrypto.encrypt(getTicketCipher, serverPublicKey); // Confidentiality
+		byte[] getTicketCipher = asyCrypto.encrypt(Parser.parseByte(getTicketBasket));
+		byte[] getTicketCipher2 = asyCrypto.encrypt(getTicketCipher, serverPublicKey);
 		
-		System.out.println("INFO: requesting session key for " + address); // TEST MESSAGE, REMOVE LATER!!!
+		System.out.println("INFO: requesting session key for " + address);
 				
 		flush(getTicketCipher2);		
 		
@@ -85,7 +83,7 @@ public class SSocketAuthenticator {
 		}
 		
 		socket.close();		
-		System.out.println("INFO: Session key for " + address + " stored."); // TEST MESSAGE, REMOVE LATER!!!
+		System.out.println("INFO: Session key for " + address + " stored.");
 		//return the key
 		return (new Peer(address, sessionKey, ticket));
 	}
