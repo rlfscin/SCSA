@@ -70,20 +70,18 @@ public class SSocket {
 	public void listen(int port) throws Exception{
 		@SuppressWarnings("resource")
 		ServerSocket server = new ServerSocket(port);
-		System.out.println("CLIENT: waiting connection...");
+		System.out.println("INFO: waiting connection...");
 		socket = server.accept();
-		System.out.println("CLIENT: connection accepted from: " + server.getInetAddress().getHostAddress());
+		System.out.println("INFO: connection accepted from: " + server.getInetAddress().getHostAddress());
 		sscoketComunicator = new SSocketComunicator(asyCrypto, socket);		
 		sscoketComunicator.readTicket();		
 	}
 
 	public void connect(String targetIp, int port) throws Exception{
 		socket = new Socket(serverAddress, serverPort);
-		System.out.println("CLIENT: CONNECT: requesting connection to ip: " + targetIp + ":" + port); // TEST MESSAGE, REMOVE LATER!!!
+		System.out.println("INFO: requesting connection to ip: " + targetIp + ":" + port); // TEST MESSAGE, REMOVE LATER!!!
 		usePeer(targetIp);
 
-		//okay but commented out for testing
-		System.out.println(peer.getAddress()+ ":" + port);
 		Socket socket = new Socket(peer.getAddress(), port);
 		sscoketComunicator = new SSocketComunicator(asyCrypto, socket);
 		sscoketComunicator.sendTicket(peer);
@@ -120,13 +118,13 @@ public class SSocket {
 	}
 
 	public void send(Serializable obj) throws Exception{
-		System.out.println("Sending object");
+		System.out.println("INFO: Sending object");
 		sscoketComunicator.sendObject(obj);
 	}
 
 
 	public Serializable receive() throws IOException, Exception{
-		System.out.println("Receiving object");
+		System.out.println("INFO: Receiving object");
 		return sscoketComunicator.receiveObject();
 	}
 
@@ -149,9 +147,6 @@ public class SSocket {
 	public Serializable readObject() throws IOException, Exception{
 		return receive();
 	}
-
-
-
 
 	public void sendString(String data) throws Exception{
 		send(data);
